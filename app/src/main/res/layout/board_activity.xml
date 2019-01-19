@@ -12,20 +12,16 @@
         android:gravity="center"
         android:clipToPadding="false">
 
-        <LinearLayout
+        <com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder
             android:id="@+id/board_holder"
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center">
 
-            <com.example.riley.piplace.BoardActivity.ScaledBoard
-                android:id="@+id/board"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_gravity="center"/>
-        </LinearLayout>
+
+        </com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder>
 
         <RelativeLayout
             android:id="@+id/color_bar"

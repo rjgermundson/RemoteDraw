@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardCommunicateTask;
 import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardSocket;
+import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
 import com.example.riley.piplace.R;
 
 import java.io.InputStream;
@@ -24,7 +25,6 @@ import java.util.Locale;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -42,7 +42,6 @@ public class BoardActivity extends AppCompatActivity {
         setContentView(R.layout.board_activity);
         setCommunicateTask();
         setBoardListener();
-       // findViewById(R.id.board_holder).setOnTouchListener(new TouchZoomListener(new ScaleGestureDetector(this, new ScaleListener((ScaledBoard) findViewById(R.id.board)))));
     }
 
     /**
@@ -61,16 +60,17 @@ public class BoardActivity extends AppCompatActivity {
      * rendered
      */
     private void setBoardListener() {
-        final ScaledBoard clientBoard = findViewById(R.id.board);
-        ViewTreeObserver boardTreeObserver = clientBoard.getViewTreeObserver();
+        final BoardHolder boardHolder = findViewById(R.id.board_holder);
+        ViewTreeObserver boardTreeObserver = boardHolder.getViewTreeObserver();
         if (boardTreeObserver.isAlive()) {
             boardTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    clientBoard.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    Bitmap pixelBoard = getStartBoard(clientBoard);
-                    clientBoard.setImageBitmap(pixelBoard);
-                    clientBoard.setOnTouchListener(new AddPixelTouchListener(clientBoard, pixelBoard));
+                    boardHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    Bitmap pixelBoard = getStartBoard(boardHolder);
+                    boardHolder.setImage(pixelBoard);
+                    //boardHolder.setOnTouchListener(new AddPixelTouchListener(boardHolder, pixelBoard));
                 }
             });
         }
@@ -81,9 +81,9 @@ public class BoardActivity extends AppCompatActivity {
      * @param clientBoard Image to construct the board's bitmap from
      * @return A bitmap representing the board state
      */
-    private Bitmap getStartBoard(ScaledBoard clientBoard) {
+    private Bitmap getStartBoard(View clientBoard) {
         int imageWidth = clientBoard.getMeasuredWidth();
-        int imageHeight = clientBoard.getMeasuredHeight();
+        int imageHeight = clientBoard.getMeasuredWidth();
         Scanner input = new Scanner(inputFromServer);
         while (!input.hasNext()) {}
         int width = input.nextInt();
@@ -166,7 +166,6 @@ public class BoardActivity extends AppCompatActivity {
                 this.board.setImageBitmap(pixelBoard);
                 String message = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, red, green, blue);
                 if (drawn.size() >= BUF_LIMIT) {
-                    System.out.println("SENT: " + drawn.size());
                     StringBuilder builder = new StringBuilder();
                     while (!drawn.isEmpty()) {
                         builder.append(drawn.remove());
@@ -177,30 +176,12 @@ public class BoardActivity extends AppCompatActivity {
                 }
             }
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                System.out.println("SENT: " + drawn.size());
                 StringBuilder builder = new StringBuilder();
                 while (!drawn.isEmpty()) {
                     builder.append(drawn.remove());
                 }
                 messageQueue.add(builder.toString());
             }
-            return true;
-        }
-    }
-
-    public class TouchZoomListener implements View.OnTouchListener {
-        private ScaleGestureDetector scaler;
-
-        public TouchZoomListener(ScaleGestureDetector scaler) {
-            this.scaler = scaler;
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                v.performClick();
-            }
-            scaler.onTouchEvent(event);
             return true;
         }
     }
