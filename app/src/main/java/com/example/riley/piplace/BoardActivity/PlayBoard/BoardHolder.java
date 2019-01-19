@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 
 /**
@@ -17,8 +18,12 @@ import android.widget.LinearLayout;
  * lower view
  */
 public class BoardHolder extends LinearLayout {
+    private static final long CLICK_TIMEOUT =
+            Double.valueOf(ViewConfiguration.getDoubleTapTimeout() / 1.3).longValue();
+
     private DrawBoard drawBoard;
-    private float prevPinchDistance;  // -1 if no pinch occurring
+    private float prevPinchDistance = -1;  // -1 if no pinch occurring
+    private long lastClickTime = -1;  // -1 Most recent was double click
 
     public BoardHolder(Context context) {
         super(context);
@@ -67,17 +72,25 @@ public class BoardHolder extends LinearLayout {
 
  @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        System.out.println(event.getPointerCount());
+        long currClickTime = System.currentTimeMillis();
+        long timeDiff = currClickTime - lastClickTime;
+        this.lastClickTime = currClickTime;
         if (event.getPointerCount() == 1) {
             prevPinchDistance = -1;
         }
+
+        if (timeDiff < CLICK_TIMEOUT) {
+            // Double click should be handled by DrawBoard
+            lastClickTime = -1;
+            System.out.println("DOUBLE_CLICK");
+
+            return false;
+        }
         if (event.getPointerCount() >= 2) {
             // Multiple fingers on screen
-            System.out.println("TWO POINTERS");
             return true;
         } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
             // Dragging to move around screen
-            System.out.println("DRAG");
             return true;
         }
         return true;
@@ -155,9 +168,9 @@ public class BoardHolder extends LinearLayout {
      * It is the image that is shown on the board
      */
     private class DrawBoard extends android.support.v7.widget.AppCompatImageView {
+        private static final float MAX_SCALE = 10.0f;
+        private static final float MIN_SCALE = 0.4f;
         private float scale;
-        private int width;
-        private int height;
 
         private DrawBoard(Context c) {
             super(c);
@@ -175,6 +188,8 @@ public class BoardHolder extends LinearLayout {
          */
         private void setScale(double pinchChange) {
             this.scale *= pinchChange;
+            this.scale = Math.max(this.scale, MIN_SCALE);
+            this.scale = Math.min(this.scale, MAX_SCALE);
             this.setScaleX(scale);
             this.setScaleY(scale);
         }

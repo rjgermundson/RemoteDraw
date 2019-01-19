@@ -67,10 +67,9 @@ public class BoardActivity extends AppCompatActivity {
                 @Override
                 public void onGlobalLayout() {
                     boardHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
                     Bitmap pixelBoard = getStartBoard(boardHolder);
                     boardHolder.setImage(pixelBoard);
-                    //boardHolder.setOnTouchListener(new AddPixelTouchListener(boardHolder, pixelBoard));
+                    boardHolder.setImageListener(new AddPixelTouchListener(pixelBoard));
                 }
             });
         }
@@ -121,11 +120,9 @@ public class BoardActivity extends AppCompatActivity {
 
         private Random r = new Random();
         private Bitmap pixelBoard;
-        private ImageView board;
         private Queue<String> drawn = new LinkedList<>();
 
-        AddPixelTouchListener(ImageView clientBoard, Bitmap pixelBoard) {
-            this.board = clientBoard;
+        AddPixelTouchListener(Bitmap pixelBoard) {
             this.pixelBoard = pixelBoard;
         }
 
@@ -141,9 +138,6 @@ public class BoardActivity extends AppCompatActivity {
         @Override
         public boolean onTouch(View board, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                board.performClick();
-            }
-            if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 int width = board.getWidth();
                 int height = board.getHeight();
                 int widthStretch = width / BOARD_PIXEL_WIDTH;
@@ -163,24 +157,9 @@ public class BoardActivity extends AppCompatActivity {
                         x * widthStretch + widthStretch,
                         y * heightStretch + heightStretch,
                         paint);
-                this.board.setImageBitmap(pixelBoard);
+                ((ImageView) board).setImageBitmap(pixelBoard);
                 String message = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, red, green, blue);
-                if (drawn.size() >= BUF_LIMIT) {
-                    StringBuilder builder = new StringBuilder();
-                    while (!drawn.isEmpty()) {
-                        builder.append(drawn.remove());
-                    }
-                    messageQueue.add(builder.toString());
-                } else {
-                    drawn.add(message);
-                }
-            }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                StringBuilder builder = new StringBuilder();
-                while (!drawn.isEmpty()) {
-                    builder.append(drawn.remove());
-                }
-                messageQueue.add(builder.toString());
+                messageQueue.add(message);
             }
             return true;
         }
