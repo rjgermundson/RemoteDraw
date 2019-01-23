@@ -22,6 +22,7 @@ public class BoardHolder extends LinearLayout {
             Double.valueOf(ViewConfiguration.getDoubleTapTimeout() / 1.3).longValue();
 
     private DrawBoard drawBoard;
+    private boolean zooming = false;
     private float prevPinchDistance = -1;  // -1 if no pinch occurring
     private long lastClickTime = -1;  // -1 Most recent was double click
 
@@ -47,10 +48,16 @@ public class BoardHolder extends LinearLayout {
 
     /**
      * Defines the bitmap that will be used for this board
+     * Sets the dimensions of the board based on the bitmap dimensions
      * @param image The image to be used for this board
      */
     public void setImage(Bitmap image) {
         drawBoard.setImageBitmap(image);
+        int margin = (this.getMeasuredWidth() - image.getWidth()) / 2;
+        LayoutParams layoutParams = new LayoutParams(image.getWidth(), image.getHeight());
+        layoutParams.setMargins(margin, 0, margin, 0);
+        layoutParams.gravity = Gravity.CENTER;
+        drawBoard.setLayoutParams(layoutParams);
         this.invalidate();
         drawBoard.invalidate();
     }
@@ -75,21 +82,21 @@ public class BoardHolder extends LinearLayout {
         long currClickTime = System.currentTimeMillis();
         long timeDiff = currClickTime - lastClickTime;
         this.lastClickTime = currClickTime;
-        if (event.getPointerCount() == 1) {
+        if (event.getPointerCount() <= 1) {
+            zooming = false;
             prevPinchDistance = -1;
         }
-
         if (timeDiff < CLICK_TIMEOUT) {
             // Double click should be handled by DrawBoard
-            lastClickTime = -1;
-            System.out.println("DOUBLE_CLICK");
-
+            lastClickTime = Integer.MIN_VALUE;
             return false;
         }
         if (event.getPointerCount() >= 2) {
             // Multiple fingers on screen
+            zooming = true;
             return true;
-        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE
+                    && !zooming) {
             // Dragging to move around screen
             return true;
         }
@@ -114,9 +121,19 @@ public class BoardHolder extends LinearLayout {
                 prevPinchDistance = distance;
             }
             return true;
-        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE){
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE
+                   && !zooming){
             // Dragging
-            System.out.println("MOVING");
+            float deltaX = 0;
+            float deltaY = 0;
+            if (event.getHistorySize() > 0) {
+                deltaX = event.getX() - event.getHistoricalX(event.getActionIndex());
+                deltaY = event.getY() - event.getHistoricalY(event.getActionIndex());
+            }
+            drawBoard.setLeft(Math.round(drawBoard.getLeft() + deltaX));
+            drawBoard.setTop(Math.round(drawBoard.getTop() + deltaY));
+            drawBoard.setRight(Math.round(drawBoard.getRight() + deltaX));
+            drawBoard.setBottom(Math.round(drawBoard.getBottom() + deltaY));
             return true;
         }
         return true;
@@ -157,6 +174,7 @@ public class BoardHolder extends LinearLayout {
     private void validate() {
         if (drawBoard.getParent() == null) {
             drawBoard.setBackgroundColor(Color.WHITE);
+
             LayoutParams layoutParams = new LayoutParams(getMeasuredWidth(), getMeasuredWidth());
             layoutParams.gravity = Gravity.CENTER;
             this.addView(drawBoard, layoutParams);
