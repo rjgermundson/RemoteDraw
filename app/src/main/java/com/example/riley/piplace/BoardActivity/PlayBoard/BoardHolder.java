@@ -216,7 +216,8 @@ public class BoardHolder extends LinearLayout {
     private void validate() {
         if (drawBoard.getParent() == null) {
             drawBoard.setBackgroundColor(Color.WHITE);
-            LayoutParams layoutParams = new LayoutParams(getMeasuredWidth(), getMeasuredWidth());
+            int minDimension = Math.min(this.getMeasuredWidth(), this.getMeasuredHeight());
+            LayoutParams layoutParams = new LayoutParams(minDimension, minDimension);
             layoutParams.gravity = Gravity.CENTER;
             this.addView(drawBoard, layoutParams);
         }
