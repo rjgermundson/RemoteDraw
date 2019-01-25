@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -116,7 +118,10 @@ public class BoardHolder extends LinearLayout {
                 if (prevPinchDistance >= 0) {
                     // Previous distance is from current state
                     double pinchChange = (double) distance / (double) prevPinchDistance;
+                    float prevScale = drawBoard.getScaleX();
                     drawBoard.setScale(pinchChange);
+                    float diff = prevScale * drawBoard.getMeasuredWidth() - drawBoard.getScaleX() * drawBoard.getMeasuredWidth();
+                    translate(drawBoard, Math.round(diff / 4), Math.round(diff / 4));
                 }
                 prevPinchDistance = distance;
             }
@@ -130,13 +135,50 @@ public class BoardHolder extends LinearLayout {
                 deltaX = event.getX() - event.getHistoricalX(event.getActionIndex());
                 deltaY = event.getY() - event.getHistoricalY(event.getActionIndex());
             }
-            drawBoard.setLeft(Math.round(drawBoard.getLeft() + deltaX));
-            drawBoard.setTop(Math.round(drawBoard.getTop() + deltaY));
-            drawBoard.setRight(Math.round(drawBoard.getRight() + deltaX));
-            drawBoard.setBottom(Math.round(drawBoard.getBottom() + deltaY));
+            translate(drawBoard, Math.round(deltaX), Math.round(deltaY));
             return true;
         }
         return true;
+    }
+
+    /**
+     * Translates the given view
+     * @param view View to translate
+     * @param deltaX Change in x direction (positive right)
+     * @param deltaY Change in y direction (positive down)
+     */
+    private void translate(View view, int deltaX, int deltaY) {
+        int widthExcess = Math.round(drawBoard.getScaleX() * drawBoard.getMeasuredWidth() - drawBoard.getMeasuredWidth());
+        int heightExcess = Math.round(drawBoard.getScaleY() * drawBoard.getMeasuredHeight() - drawBoard.getMeasuredHeight());
+        int widthMargin = (this.getMeasuredWidth() - drawBoard.getMeasuredWidth()) / 2;
+        int heightMargin = (this.getMeasuredHeight() - drawBoard.getMeasuredHeight()) / 2;
+        System.out.println(widthExcess);
+        view.setLeft(median(-widthExcess + widthMargin,
+                            drawBoard.getLeft() + deltaX ,
+                            widthExcess + widthMargin));
+        view.setTop(median(-heightExcess + heightMargin,
+                           drawBoard.getTop() + deltaY,
+                           heightExcess + heightMargin));
+        view.setRight(drawBoard.getLeft() + drawBoard.getMeasuredWidth());
+        view.setBottom(drawBoard.getTop() + drawBoard.getMeasuredHeight());
+    }
+
+    /**
+     * Returns the median value of a, b and c
+     * @param a
+     * @param b
+     * @param c
+     * @return Median of given values
+     */
+    private int median(int a, int b, int c) {
+        if ((a <= b && b <= c)
+           || (a >= b && b >= c)) {
+            return b;
+        } else if ((a <= c && c <= b)
+                   || (a >= c && c >= b)) {
+            return c;
+        }
+        return a;
     }
 
     /**
@@ -174,7 +216,6 @@ public class BoardHolder extends LinearLayout {
     private void validate() {
         if (drawBoard.getParent() == null) {
             drawBoard.setBackgroundColor(Color.WHITE);
-
             LayoutParams layoutParams = new LayoutParams(getMeasuredWidth(), getMeasuredWidth());
             layoutParams.gravity = Gravity.CENTER;
             this.addView(drawBoard, layoutParams);
@@ -187,7 +228,7 @@ public class BoardHolder extends LinearLayout {
      */
     private class DrawBoard extends android.support.v7.widget.AppCompatImageView {
         private static final float MAX_SCALE = 10.0f;
-        private static final float MIN_SCALE = 0.4f;
+        private static final float MIN_SCALE = 1.0f;
         private float scale;
 
         private DrawBoard(Context c) {
