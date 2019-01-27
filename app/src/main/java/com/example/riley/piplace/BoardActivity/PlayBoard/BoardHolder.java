@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -22,6 +21,7 @@ import android.widget.LinearLayout;
 public class BoardHolder extends LinearLayout {
     private static final long CLICK_TIMEOUT =
             Double.valueOf(ViewConfiguration.getDoubleTapTimeout() / 1.3).longValue();
+    private static final float DIST_ERROR = 30;
 
     private DrawBoard drawBoard;
     private boolean zooming = false;
@@ -40,11 +40,6 @@ public class BoardHolder extends LinearLayout {
 
     public BoardHolder(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.drawBoard = new DrawBoard(context, attrs);
-    }
-
-    public BoardHolder(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         this.drawBoard = new DrawBoard(context, attrs);
     }
 
@@ -152,7 +147,6 @@ public class BoardHolder extends LinearLayout {
         int heightExcess = Math.round(drawBoard.getScaleY() * drawBoard.getMeasuredHeight() - drawBoard.getMeasuredHeight());
         int widthMargin = (this.getMeasuredWidth() - drawBoard.getMeasuredWidth()) / 2;
         int heightMargin = (this.getMeasuredHeight() - drawBoard.getMeasuredHeight()) / 2;
-        System.out.println(widthExcess);
         view.setLeft(median(-widthExcess + widthMargin,
                             drawBoard.getLeft() + deltaX ,
                             widthExcess + widthMargin));
@@ -165,9 +159,6 @@ public class BoardHolder extends LinearLayout {
 
     /**
      * Returns the median value of a, b and c
-     * @param a
-     * @param b
-     * @param c
      * @return Median of given values
      */
     private int median(int a, int b, int c) {

@@ -12,20 +12,18 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * This class communicates with on a given socket
+ * This class is meant to handle the communication from the client to the server
  */
-public class BoardCommunicateTask extends AsyncTask<Void, Void, Void> {
+public class BoardWriteTask extends AsyncTask<Void, Void, Void> {
     private WeakReference<BoardActivity> activity;
     private Socket socket;
-    private InputStream input;
     private OutputStream output;
     private BlockingQueue<String> messages;
 
-    private BoardCommunicateTask(BoardActivity activity, Socket socket, InputStream input,
-                                 OutputStream output, BlockingQueue<String> messageQueue) {
+    private BoardWriteTask(BoardActivity activity, Socket socket,
+                             OutputStream output, BlockingQueue<String> messageQueue) {
         this.activity = new WeakReference<>(activity);
         this.socket = socket;
-        this.input = input;
         this.output = output;
         this.messages = messageQueue;
     }
@@ -39,7 +37,7 @@ public class BoardCommunicateTask extends AsyncTask<Void, Void, Void> {
      *         null if socket.notConnected || socket == null
      *         null if messageQueue == null
      */
-    public static BoardCommunicateTask createTask(BoardActivity activity, Socket socket, BlockingQueue<String> messageQueue) {
+    public static BoardWriteTask createTask(BoardActivity activity, Socket socket, BlockingQueue<String> messageQueue) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -50,13 +48,12 @@ public class BoardCommunicateTask extends AsyncTask<Void, Void, Void> {
         InputStream input;
         OutputStream output;
         try {
-            input = socket.getInputStream();
             output = socket.getOutputStream();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return new BoardCommunicateTask(activity, socket, input, output, messageQueue);
+        return new BoardWriteTask(activity, socket, output, messageQueue);
     }
 
     @Override
@@ -123,15 +120,5 @@ public class BoardCommunicateTask extends AsyncTask<Void, Void, Void> {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Returns the stream representing what the server
-     * sends to the client
-     * @return InputStream for the connection between
-     *         the client and server
-     */
-    public InputStream getInputStream() {
-        return this.input;
     }
 }

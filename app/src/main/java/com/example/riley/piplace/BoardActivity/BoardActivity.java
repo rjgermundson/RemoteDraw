@@ -5,7 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,23 +17,23 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.riley.piplace.BoardActivity.ColorPicker.ColorPickerDialog;
-import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardCommunicateTask;
+import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardReadTask;
 import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardSocket;
+import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardWriteTask;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardAddPixelListener;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
 import com.example.riley.piplace.R;
 
-import java.io.InputStream;
-import java.util.Scanner;
+import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class BoardActivity extends AppCompatActivity {
+    public static final int MESSAGE_REFRESH_BOARD = 20;
+    public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener
     private static final int BOARD_PIXEL_WIDTH = 64;
     private static final int BOARD_PIXEL_HEIGHT = 64;
     private static int color = Color.RED;
-    private BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();  // Pipeline to server
-    private InputStream inputFromServer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +41,11 @@ public class BoardActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.board_activity);
-        setCommunicateTask();
-        setBoardListener();
+        BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+        if (!setWriteTask(messageQueue)) {
+            close();
+        }
+        setBoardListener(messageQueue);
         setColorWheelListener();
     }
 
@@ -60,21 +66,43 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize task meant for communicating with the current board
+     * Initialize task meant for writing to server for the current board
+     * @param messageQueue Queue that serves as pipe for messages to server
+     * @return True if successful
+     *         False otherwise
      */
-    private void setCommunicateTask() {
-        BoardCommunicateTask task = BoardCommunicateTask.createTask(this, BoardSocket.getSocket(), messageQueue);
-        if (task != null) {
-            task.execute();
-            inputFromServer = task.getInputStream();
+    private boolean setWriteTask(BlockingQueue<String> messageQueue) {
+        Socket socket = BoardSocket.getSocket();
+        BoardWriteTask writeTask = BoardWriteTask.createTask(this, socket, messageQueue);
+        if (writeTask != null) {
+            writeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            return true;
         }
+        return false;
+    }
+
+    /**
+     * Initialize task meant for reading from the server for the current board
+     * @param bitmap Map of the client's board
+     * @return True if successful
+     *         False otherwise
+     */
+    private boolean setReadTask(Bitmap bitmap) {
+        Socket socket = BoardSocket.getSocket();
+        BoardReadTask readTask = BoardReadTask.createTask(this, socket, bitmap);
+        if (readTask != null) {
+            readTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            return true;
+        }
+        return false;
     }
 
     /**
      * Initialize the listener for the pixel board once the view is
      * rendered
+     * @param messageQueue Queue that serves as pipe for messages to server
      */
-    private void setBoardListener() {
+    private void setBoardListener(final BlockingQueue<String> messageQueue) {
         final BoardHolder boardHolder = findViewById(R.id.board_holder);
         ViewTreeObserver boardTreeObserver = boardHolder.getViewTreeObserver();
         if (boardTreeObserver.isAlive()) {
@@ -83,6 +111,11 @@ public class BoardActivity extends AppCompatActivity {
                 public void onGlobalLayout() {
                     boardHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     Bitmap pixelBoard = getStartBoard(boardHolder);
+                    UpdateBoardHandler.initialize(boardHolder);
+                    BoardActivity.updateHandler = UpdateBoardHandler.getInstance();
+                    if (!setReadTask(pixelBoard)) {
+                        close();
+                    }
                     boardHolder.setImage(pixelBoard);
                     boardHolder.setImageListener(new BoardAddPixelListener(pixelBoard, messageQueue,
                                                                            BOARD_PIXEL_WIDTH,
@@ -100,33 +133,7 @@ public class BoardActivity extends AppCompatActivity {
     private Bitmap getStartBoard(View clientBoard) {
         int imageWidth = (clientBoard.getMeasuredWidth() / BOARD_PIXEL_WIDTH) * BOARD_PIXEL_WIDTH;
         int imageHeight = (clientBoard.getMeasuredWidth() / BOARD_PIXEL_HEIGHT) * BOARD_PIXEL_HEIGHT;
-        Scanner input = new Scanner(inputFromServer);
-        while (!input.hasNext()) {}  // Wait for server response
-        int width = input.nextInt();
-        int height = input.nextInt();
-        Bitmap boardBitmap = Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
-
-        int widthStretch = imageWidth / BOARD_PIXEL_WIDTH;
-        int heightStretch = imageHeight / BOARD_PIXEL_HEIGHT;
-
-        Canvas canvas = new Canvas(boardBitmap);
-        Paint paint = new Paint();
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                int red = input.nextInt();
-                int green = input.nextInt();
-                int blue = input.nextInt();
-                if (red != 0 || green != 0 || blue != 0) {
-                    paint.setColor(Color.argb(255, red, green, blue));
-                    canvas.drawRect(j * widthStretch,
-                            i * heightStretch,
-                            j * widthStretch + widthStretch,
-                            i * heightStretch + heightStretch,
-                            paint);
-                }
-            }
-        }
-        return boardBitmap;
+        return Bitmap.createBitmap(imageWidth, imageHeight, Bitmap.Config.ARGB_8888);
     }
 
     private void setColorWheelListener() {
@@ -171,4 +178,49 @@ public class BoardActivity extends AppCompatActivity {
             }
         }
     }
+
+    public static class UpdateBoardHandler extends Handler {
+        private static UpdateBoardHandler instance;
+        BoardHolder boardHolder;
+
+        private UpdateBoardHandler(BoardHolder boardHolder) {
+            this.boardHolder = boardHolder;
+        }
+
+        /**
+         * Initialize the BoardUpdateHandler
+         * @param boardHolder BoardHolder to be in charge of updating
+         * @return True if boardHolder != null
+         *         False if boardHolder == null
+         */
+        public static boolean initialize(BoardHolder boardHolder) {
+            if (boardHolder == null) {
+                return false;
+            }
+            instance = new UpdateBoardHandler(boardHolder);
+            return true;
+        }
+
+        /**
+         * Get the instance of the handler
+         * @return The instance of the handler
+         *         Null if initialize not called
+         */
+        public static UpdateBoardHandler getInstance() {
+            if (instance == null) {
+                // Not initialized
+                return null;
+            }
+            return instance;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MESSAGE_REFRESH_BOARD) {
+                boardHolder.invalidate();
+            }
+        }
+    }
+
 }

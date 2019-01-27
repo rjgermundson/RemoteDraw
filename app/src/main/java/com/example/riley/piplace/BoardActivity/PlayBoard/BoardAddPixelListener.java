@@ -4,14 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.example.riley.piplace.BoardActivity.BoardActivity;
 
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -44,8 +43,6 @@ public class BoardAddPixelListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View board, MotionEvent event) {
-        System.out.println(board.getMeasuredWidth() + ":" + board.getMeasuredHeight());
-        System.out.println(event.getX() + ", " + event.getY());
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             int width = (board.getWidth() / boardPixelWidth) * boardPixelWidth;
             int height = (board.getHeight() / boardPixelHeight) * boardPixelHeight;
@@ -64,9 +61,13 @@ public class BoardAddPixelListener implements View.OnTouchListener {
                     x * widthStretch + widthStretch,
                     y * heightStretch + heightStretch,
                     paint);
-            ((ImageView) board).setImageBitmap(pixelBoard);
-            String message = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, Color.red(color), Color.green(color), Color.blue(color));
-            messageQueue.add(message);
+            Message message = new Message();
+            message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
+            BoardActivity.updateHandler.sendMessage(message);
+            String changeMessage = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, Color.red(color), Color.green(color), Color.blue(color));
+            messageQueue.add(changeMessage);
+        } else {
+            board.performClick();
         }
         return true;
     }
