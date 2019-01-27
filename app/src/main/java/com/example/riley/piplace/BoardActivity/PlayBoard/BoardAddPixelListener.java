@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.riley.piplace.BoardActivity.BoardActivity;
+
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -21,8 +23,6 @@ public class BoardAddPixelListener implements View.OnTouchListener {
 
     private BlockingQueue<String> messageQueue;  // Pipeline to server
     private Bitmap pixelBoard;
-
-    private Random r = new Random();
 
     public BoardAddPixelListener(Bitmap pixelBoard,
                                  BlockingQueue<String> messageQueue,
@@ -55,21 +55,17 @@ public class BoardAddPixelListener implements View.OnTouchListener {
             int x = boardPixelWidth * Math.round(event.getX()) / width;
             int y = boardPixelHeight * Math.round(event.getY()) / height;
 
-            System.out.println(x + ", " + y);
-
-            int red = r.nextInt(256);
-            int green = r.nextInt(256);
-            int blue = r.nextInt(256);
             Canvas canvas = new Canvas(pixelBoard);
+            int color = BoardActivity.getColor();
             Paint paint = new Paint();
-            paint.setColor(Color.argb(255, red, green, blue));
+            paint.setColor(color);
             canvas.drawRect(x * widthStretch,
                     y * heightStretch,
                     x * widthStretch + widthStretch,
                     y * heightStretch + heightStretch,
                     paint);
             ((ImageView) board).setImageBitmap(pixelBoard);
-            String message = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, red, green, blue);
+            String message = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, Color.red(color), Color.green(color), Color.blue(color));
             messageQueue.add(message);
         }
         return true;

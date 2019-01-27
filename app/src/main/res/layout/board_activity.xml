@@ -25,16 +25,15 @@
 
         <RelativeLayout
             android:id="@+id/color_bar"
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:layout_gravity="bottom"
             android:clipToPadding="false">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/color_wheel"
-                android:src="@drawable/color_wheel"
-                android:background="@drawable/color_wheel"
+                android:background="@color/clear"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:elevation="40dp"

@@ -1,5 +1,6 @@
 package com.example.riley.piplace.BoardActivity;
 
+import android.app.DialogFragment;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,8 +10,10 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.riley.piplace.BoardActivity.ColorPicker.ColorPickerDialog;
 import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardCommunicateTask;
 import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardSocket;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardAddPixelListener;
@@ -25,6 +28,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BoardActivity extends AppCompatActivity {
     private static final int BOARD_PIXEL_WIDTH = 64;
     private static final int BOARD_PIXEL_HEIGHT = 64;
+    private static int color = Color.RED;
     private BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();  // Pipeline to server
     private InputStream inputFromServer;
 
@@ -36,6 +40,23 @@ public class BoardActivity extends AppCompatActivity {
         setContentView(R.layout.board_activity);
         setCommunicateTask();
         setBoardListener();
+        setColorWheelListener();
+    }
+
+    /**
+     * Set the current color for a board to newColor
+     * @param newColor Color to use
+     */
+    public static void setColor(int newColor) {
+        color = newColor;
+    }
+
+    /**
+     * Get the current color for a board
+     * @return The current color a board uses
+     */
+    public static int getColor() {
+        return color;
     }
 
     /**
@@ -108,8 +129,46 @@ public class BoardActivity extends AppCompatActivity {
         return boardBitmap;
     }
 
+    private void setColorWheelListener() {
+        final ImageButton colorWheel = findViewById(R.id.color_wheel);
+        ViewTreeObserver colorWheelObserver = colorWheel.getViewTreeObserver();
+        if (colorWheelObserver.isAlive()) {
+            colorWheelObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    colorWheel.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    Bitmap buttonImage = Bitmap.createBitmap(colorWheel.getMeasuredWidth(),
+                                                             colorWheel.getMeasuredHeight(),
+                                                             Bitmap.Config.ARGB_8888);
+                    drawButton(buttonImage);
+                    colorWheel.setImageBitmap(buttonImage);
+                    colorWheel.setOnClickListener(new ChangeColorListener());
+                }
+            });
+        }
+
+    }
+
+    private void drawButton(Bitmap image) {
+        Canvas canvas = new Canvas(image);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawCircle(image.getWidth() / 2, image.getHeight() / 2,
+                          image.getWidth() / 2, paint);
+    }
 
     public void close() {
         Toast.makeText(this, "Connection closed", Toast.LENGTH_SHORT).show();
+    }
+
+    private class ChangeColorListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            DialogFragment picker = ColorPickerDialog.getInstance(getApplicationContext(), (ImageButton) findViewById(R.id.color_wheel));
+            if (picker != null) {
+                picker.show(getFragmentManager(), "Picker");
+            }
+        }
     }
 }
