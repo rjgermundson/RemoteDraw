@@ -23,7 +23,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteOrder;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PORT = 6000;
+    private static final int PORT = 5665;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

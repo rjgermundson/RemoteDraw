@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -85,7 +84,7 @@ public class BoardActivity extends AppCompatActivity {
      */
     private boolean setWriteTask(BlockingQueue<String> messageQueue) {
         Socket socket = BoardClientSocket.getSocket();
-        BoardWriteThread writeTask = BoardWriteThread.createTask(this, socket, messageQueue);
+        BoardWriteThread writeTask = BoardWriteThread.createThread(this, socket, messageQueue);
         if (writeTask != null) {
             writeTask.start();
             return true;
@@ -101,7 +100,7 @@ public class BoardActivity extends AppCompatActivity {
      */
     private boolean setReadTask(Bitmap bitmap) {
         Socket socket = BoardClientSocket.getSocket();
-        BoardReadThread readTask = BoardReadThread.createTask(this, socket, bitmap);
+        BoardReadThread readTask = BoardReadThread.createThread(this, socket, bitmap);
         if (readTask != null) {
             readTask.start();
             return true;

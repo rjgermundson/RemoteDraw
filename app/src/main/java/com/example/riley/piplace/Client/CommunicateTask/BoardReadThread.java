@@ -9,6 +9,7 @@ import android.os.Message;
 
 import com.example.riley.piplace.BoardActivity.BoardActivity;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -22,14 +23,14 @@ import java.util.Scanner;
 public class BoardReadThread extends Thread {
     private WeakReference<Activity> activity;
     private Socket socket;
-    private InputStream inputStream;
+    private DataInputStream inputStream;
     private Scanner input;
     private Bitmap bitmap;
 
     private BoardReadThread(Activity activity, Socket socket, InputStream inputStream, Bitmap bitmap) {
         this.activity = new WeakReference<>(activity);
         this.socket = socket;
-        this.inputStream = inputStream;
+        this.inputStream = new DataInputStream(inputStream);
         this.input = new Scanner(inputStream);
         this.bitmap = bitmap;
     }
@@ -44,7 +45,7 @@ public class BoardReadThread extends Thread {
      *         null if activity == null
      *         null if socket.notConnected || socket == null
      */
-    public static BoardReadThread createTask(Activity activity, Socket socket, Bitmap bitmap) {
+    public static BoardReadThread createThread(Activity activity, Socket socket, Bitmap bitmap) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -63,7 +64,10 @@ public class BoardReadThread extends Thread {
     @Override
     public void run() {
         getInitialBoard();
+        int count = 0;
         while (isConnected()) {
+            count++;
+            System.out.println("Receive:" + count);
             try {
                 receive();
             } catch (Exception e) {
@@ -74,7 +78,9 @@ public class BoardReadThread extends Thread {
     }
 
     private void receive() {
-        if (input.hasNextInt()) {
+        System.out.println("Waiting for dots");
+        if (input.hasNext()) {
+            System.out.println("Getting dots");
             int imageWidth = bitmap.getWidth();
             int imageHeight = bitmap.getHeight();
             int widthStretch = imageWidth / BoardActivity.BOARD_PIXEL_WIDTH;
@@ -106,66 +112,40 @@ public class BoardReadThread extends Thread {
      * Gets the initial board from the server
      */
     private void getInitialBoard() {
-        while (!input.hasNextInt()) { }
-        int bytes = input.nextInt();
-        System.out.println("LENGTH: " + bytes);
-        byte[] bitmapBytes = new byte[bytes];
-        int read = 0;
+        // Get the number of bytes that are in the initial bitmap
+        // And read those into a byte array
+        int expecting = 0;
+        byte[] bitmapBytes = null;
         try {
-            int result = -1;
-            while (result != 0) {
-                System.out.println(read + " bytes read");
-                result = inputStream.read(bitmapBytes, read, bytes - read);
-                System.out.println(result);
-                read += result;
+            byte[] expectingAsBytes = new byte[4];
+            for (int i = 0; i < 4; i++) {
+                expectingAsBytes[i] = inputStream.readByte();
             }
-            System.out.println("READ " + read + " bytes");
+            expecting = bytesToInt(expectingAsBytes);
+            bitmapBytes = new byte[expecting];
+            inputStream.readFully(bitmapBytes);
         } catch (IOException e) {
-            closeSocket();
-            System.out.println("FAILED TO READ BITMAP");
-            return;
+            e.printStackTrace();
         }
-        System.out.println("READ BITMAP");
-        Bitmap board = BitmapFactory.decodeByteArray(bitmapBytes, 0, bytes);
-        if (board == null) {
-            System.out.println("NULL BOARD");
-            int count = 0;
-            while (input.hasNextByte()) {
-                input.nextByte();
-                count++;
-            }
-            System.out.println(count + " bytes remaining");
-        }
+
+        // Convert byte array to local bitmap
+        Bitmap board = BitmapFactory.decodeByteArray(bitmapBytes, 0, expecting);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(board, 0, 0, null);
-//        int imageWidth = bitmap.getWidth();
-//        int imageHeight = bitmap.getHeight();
-//        int widthStretch = imageWidth / BoardActivity.BOARD_PIXEL_WIDTH;
-//        int heightStretch = imageHeight / BoardActivity.BOARD_PIXEL_HEIGHT;
-//        while (!input.hasNextInt()) {}
-//        int width = input.nextInt();
-//        int height = input.nextInt();
-//
-//        Canvas canvas = new Canvas(bitmap);
-//        Paint paint = new Paint();
-//        for (int i = 0; i < height; i++) {
-//            for (int j = 0; j < width; j++) {
-//                int red = input.nextInt();
-//                int green = input.nextInt();
-//                int blue = input.nextInt();
-//                if (red != 0 || green != 0 || blue != 0) {
-//                    paint.setColor(rgbToInt(red, green, blue));
-//                    canvas.drawRect(j * widthStretch,
-//                            i * heightStretch,
-//                            j * widthStretch + widthStretch,
-//                            i * heightStretch + heightStretch,
-//                            paint);
-//                }
-//            }
-//        }
+
+        // Alert UI handler for update
         Message message = new Message();
         message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
         BoardActivity.updateHandler.sendMessage(message);
+    }
+
+    private int bytesToInt(byte[] bytes) {
+        int result = (bytes[0] & 0xFF);
+        for (int i = 1; i < 4; i++) {
+            result = result << 8;
+            result += (bytes[i] & 0xFF);
+        }
+        return result;
     }
 
     private int rgbToInt(int r, int g, int b) {
@@ -200,6 +180,7 @@ public class BoardReadThread extends Thread {
      * Closes the socket this task communicates on
      */
     private void closeSocket() {
+        System.out.println("CLOSING SOCKET");
         try {
             socket.close();
         } catch (IOException e) {

@@ -27,9 +27,9 @@ public class ServerListenThread extends Thread {
         if (serverSocket != null) {
             while (true) {
                 try {
-                    Socket clientSocket = serverSocket.accept();
                     int id = getID();
                     if (id != -1) {
+                        Socket clientSocket = serverSocket.accept();
                         ServerPerClientThread thread = new ServerPerClientThread(clientSocket, id);
                         clients[id] = thread;
                         thread.start();

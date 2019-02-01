@@ -3,7 +3,6 @@ package com.example.riley.piplace.Client.CommunicateTask;
 import android.app.Activity;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.Socket;
@@ -35,7 +34,7 @@ public class BoardWriteThread extends Thread {
      *         null if socket.notConnected || socket == null
      *         null if messageQueue == null
      */
-    public static BoardWriteThread createTask(Activity activity, Socket socket, BlockingQueue<String> messageQueue) {
+    public static BoardWriteThread createThread(Activity activity, Socket socket, BlockingQueue<String> messageQueue) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -43,7 +42,6 @@ public class BoardWriteThread extends Thread {
         } else if (messageQueue == null) {
             return null;
         }
-        InputStream input;
         OutputStream output;
         try {
             output = socket.getOutputStream();

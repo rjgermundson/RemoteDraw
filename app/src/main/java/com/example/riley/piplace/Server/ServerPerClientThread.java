@@ -1,8 +1,6 @@
 package com.example.riley.piplace.Server;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Pair;
 
 import com.example.riley.piplace.Messages.Lines.Line;
@@ -10,6 +8,7 @@ import com.example.riley.piplace.Messages.Lines.Line;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -54,6 +53,7 @@ public class ServerPerClientThread extends Thread {
         super.run();
         System.out.println("DOING IN BACK");
         sendBoard();
+        System.out.println("SENT BOARD");
         while (isConnected()) {
             // Listen to the client for action
             try {
@@ -62,6 +62,7 @@ public class ServerPerClientThread extends Thread {
                 e.printStackTrace();
             }
             if (lines.size() > 0) {
+                System.out.println("SENDING");
                 send(lines.remove());
             }
         }
@@ -76,23 +77,26 @@ public class ServerPerClientThread extends Thread {
      * Check to see if the client has made any actions
      */
     private void receive() {
-        if (input.hasNextInt()) {
-            // Construct the line that the client drew
-            int color = input.nextInt();
-            Line line = new Line(color, clientID);
-            int count = input.nextInt();
-            if (count == 0) {
-                // Count should never be zero
-                // Todo: Send error flag
-                return;
-            }
-            for (int i = 0; i < count; i++) {
-                int x = input.nextInt();
-                int y = input.nextInt();
-                line.addPixel(new Pair<>(x, y));
-            }
-            ServerUpdateThread.addLine(line);
+        int color;
+        try {
+            color = input.nextInt();
+        } catch (Exception e) {
+            return;
         }
+        // Construct the line that the client drew
+        Line line = new Line(color, clientID);
+        int count = input.nextInt();
+        if (count == 0) {
+            // Count should never be zero
+            // Todo: Send error flag
+            return;
+        }
+        for (int i = 0; i < count; i++) {
+            int x = input.nextInt();
+            int y = input.nextInt();
+            line.addPixel(new Pair<>(x, y));
+        }
+        ServerUpdateThread.addLine(line);
     }
 
     /**
@@ -135,22 +139,25 @@ public class ServerPerClientThread extends Thread {
         Bitmap board = LockedBitmap.get();
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         board.compress(Bitmap.CompressFormat.PNG, 100, byteStream);
-        System.out.println("COMPRESSED");
         try {
             byte[] boardBytes = byteStream.toByteArray();
-            Bitmap test = BitmapFactory.decodeByteArray(boardBytes, 0, boardBytes.length);
-            if (test == null) {
-                System.out.println("DIDN'T RECREATE THE BITMAP");
-            }
-            outputStream.write((boardBytes.length + " ").getBytes());
-            System.out.println("Wrote: " + boardBytes.length);
+            // Send integer length as byte array
+            outputStream.write(intToBytes(boardBytes.length));
+            // Send bitmap
             outputStream.write(boardBytes);
-            outputStream.flush();
-            outputStream.write('a');
         } catch (IOException e) {
             closeSocket();
         }
         LockedBitmap.release();
+    }
+
+    private byte[] intToBytes(int integer) {
+        byte[] result = new byte[4];
+        for (int i = 0; i < 4; i++) {
+            result[4 - i - 1] = (Integer.valueOf(integer % 1024).byteValue());
+            integer = integer >> 8;
+        }
+        return result;
     }
 
     /**
