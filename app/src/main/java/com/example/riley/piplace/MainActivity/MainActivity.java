@@ -1,6 +1,9 @@
 package com.example.riley.piplace.MainActivity;
 
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +13,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.riley.piplace.BoardActivity.BoardActivity;
+import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.R;
+import com.example.riley.piplace.Server.HostTask;
+
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int PORT = 5050;
+    private static final int PORT = 6000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +31,25 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
-        setButton();
+        setConnectButton();
+        setHostButton();
     }
 
     /**
      * Initialize the connect button
      */
-    private void setButton() {
+    private void setConnectButton() {
         Button connect = findViewById(R.id.connect_button);
         final EditText hostText = findViewById(R.id.host_input);
         connect.setOnClickListener(new ConnectOnClickListener(this, hostText));
+    }
+
+    /**
+     * Initialize the host button
+     */
+    private void setHostButton() {
+        Button host = findViewById(R.id.host_button);
+        host.setOnClickListener(new HostClickListener(this));
     }
 
     private class ConnectOnClickListener implements View.OnClickListener {
@@ -50,11 +69,54 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class HostClickListener implements View.OnClickListener {
+        private MainActivity mainActivity;
+
+        HostClickListener(MainActivity activity) {
+            this.mainActivity = activity;
+        }
+
+        @Override
+        public void onClick(View v) {
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            int ip = wifiInfo.getIpAddress();
+            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                ip = Integer.reverseBytes(ip);
+            }
+            byte[] ipBytes = BigInteger.valueOf(ip).toByteArray();
+
+            String hostIP;
+            try {
+                hostIP = InetAddress.getByAddress(ipBytes).getHostAddress();
+                HostTask task = new HostTask(mainActivity, hostIP, PORT);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+
+                failedToHost();
+            }
+        }
+    }
+
     public void failedToOpenBoard(String host) {
         Toast.makeText(this, "Failed to connect to " + host, Toast.LENGTH_SHORT).show();
     }
 
-    public void openBoard(String host) {
+    public void failedToHost() {
+        Toast.makeText(this, "Failed to open server", Toast.LENGTH_SHORT).show();
+    }
+
+    public void openClientBoard() {
         startActivity(new Intent(this, BoardActivity.class));
+    }
+
+    public void openServerBoard(String IP, int port) {
+        Bundle bundle = new Bundle();
+        bundle.putString("IP", IP);
+        bundle.putInt("PORT", port);
+        Intent intent = new Intent(this, ServerBoardActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

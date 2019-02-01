@@ -29,7 +29,7 @@ public class ColorPickerDialog extends DialogFragment {
 
     public ColorPickerDialog() {}
 
-    public static ColorPickerDialog getInstance(Context context, ImageButton wheel) {
+    public static ColorPickerDialog newInstance(Context context, ImageButton wheel) {
         if (context == null) {
             if (instance == null) {
                 return null;
@@ -46,6 +46,10 @@ public class ColorPickerDialog extends DialogFragment {
         }
         instance = new ColorPickerDialog();
         colorWheel = wheel;
+        return instance;
+    }
+
+    public static ColorPickerDialog getInstance() {
         return instance;
     }
 
@@ -89,6 +93,7 @@ public class ColorPickerDialog extends DialogFragment {
                 wheelCanvas.drawCircle(width / 2, width / 2, width / 2, wheelPaint);
                 colorWheel.setImageBitmap(wheelBitmap);
                 BoardActivity.setColor(color);
+                getDialog().dismiss();
             }
         });
         return button;

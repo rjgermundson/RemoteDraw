@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 public class BoardHolder extends LinearLayout {
     private static final long CLICK_TIMEOUT =
             Double.valueOf(ViewConfiguration.getDoubleTapTimeout() / 1.3).longValue();
-    private static final float DIST_ERROR = 30;
 
     private DrawBoard drawBoard;
     private boolean zooming = false;

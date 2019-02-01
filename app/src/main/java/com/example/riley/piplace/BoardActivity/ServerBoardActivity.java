@@ -1,11 +1,11 @@
 package com.example.riley.piplace.BoardActivity;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,51 +14,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.riley.piplace.BoardActivity.ColorPicker.ColorPickerDialog;
-import com.example.riley.piplace.Client.CommunicateTask.BoardReadThread;
-import com.example.riley.piplace.Client.CommunicateTask.BoardClientSocket;
-import com.example.riley.piplace.Client.CommunicateTask.BoardWriteThread;
-import com.example.riley.piplace.Client.BoardAddPixelListener;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
 import com.example.riley.piplace.R;
+import com.example.riley.piplace.Server.BoardServerSocket;
+import com.example.riley.piplace.Server.LockedBitmap;
+import com.example.riley.piplace.Server.ServerAddPixelListener;
+import com.example.riley.piplace.Server.ServerListenThread;
+import com.example.riley.piplace.Server.ServerUpdateThread;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
-public class BoardActivity extends AppCompatActivity {
+public class ServerBoardActivity extends AppCompatActivity {
     public static final int MESSAGE_REFRESH_BOARD = 20;
-    public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener
+    public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener?
     public static final int BOARD_PIXEL_WIDTH = 64;
     public static final int BOARD_PIXEL_HEIGHT = 64;
     private static int color = Color.RED;
+
+    private String IP;
+    private int port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
-        setContentView(R.layout.board_activity);
-        BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
-        if (!setWriteTask(messageQueue)) {
-            close();
-        }
-        setBoardListener(messageQueue);
+        setContentView(R.layout.server_board_activity);
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        IP = extras.getString("IP");
+        port = extras.getInt("PORT");
+        setInfo();
+        setBoardListener();
         setColorWheelListener();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        try {
-            BoardClientSocket.getSocket().close();
-            BoardClientSocket.setSocket(null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setServerListener();
     }
 
     /**
@@ -78,43 +69,20 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     /**
-     * Initialize task meant for writing to server for the current board
-     * @param messageQueue Queue that serves as pipe for messages to server
-     * @return True if successful
-     *         False otherwise
+     * Initialize the session fields
      */
-    private boolean setWriteTask(BlockingQueue<String> messageQueue) {
-        Socket socket = BoardClientSocket.getSocket();
-        BoardWriteThread writeTask = BoardWriteThread.createTask(this, socket, messageQueue);
-        if (writeTask != null) {
-            writeTask.start();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Initialize task meant for reading from the server for the current board
-     * @param bitmap Map of the client's board
-     * @return True if successful
-     *         False otherwise
-     */
-    private boolean setReadTask(Bitmap bitmap) {
-        Socket socket = BoardClientSocket.getSocket();
-        BoardReadThread readTask = BoardReadThread.createTask(this, socket, bitmap);
-        if (readTask != null) {
-            readTask.start();
-            return true;
-        }
-        return false;
+    private void setInfo() {
+        TextView ipText = findViewById(R.id.ip_field);
+        ipText.setText(IP);
+        TextView portText = findViewById(R.id.port_field);
+        portText.setText("" + port);
     }
 
     /**
      * Initialize the listener for the pixel board once the view is
      * rendered
-     * @param messageQueue Queue that serves as pipe for messages to server
      */
-    private void setBoardListener(final BlockingQueue<String> messageQueue) {
+    private void setBoardListener() {
         final BoardHolder boardHolder = findViewById(R.id.board_holder);
         ViewTreeObserver boardTreeObserver = boardHolder.getViewTreeObserver();
         if (boardTreeObserver.isAlive()) {
@@ -123,13 +91,12 @@ public class BoardActivity extends AppCompatActivity {
                 public void onGlobalLayout() {
                     boardHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     Bitmap pixelBoard = getStartBoard(boardHolder);
+                    LockedBitmap.setBitmap(pixelBoard);
                     UpdateBoardHandler.initialize(boardHolder);
-                    BoardActivity.updateHandler = UpdateBoardHandler.getInstance();
-                    if (!setReadTask(pixelBoard)) {
-                        close();
-                    }
+                    ServerBoardActivity.updateHandler = UpdateBoardHandler.getInstance();
                     boardHolder.setImage(pixelBoard);
-                    boardHolder.setImageListener(new BoardAddPixelListener(pixelBoard, messageQueue));
+                    boardHolder.setImageListener(new ServerAddPixelListener(BOARD_PIXEL_WIDTH,
+                                                                            BOARD_PIXEL_HEIGHT));
                 }
             });
         }
@@ -155,11 +122,11 @@ public class BoardActivity extends AppCompatActivity {
                 public void onGlobalLayout() {
                     colorWheel.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     Bitmap buttonImage = Bitmap.createBitmap(colorWheel.getMeasuredWidth(),
-                                                             colorWheel.getMeasuredHeight(),
-                                                             Bitmap.Config.ARGB_8888);
+                            colorWheel.getMeasuredHeight(),
+                            Bitmap.Config.ARGB_8888);
                     drawButton(buttonImage);
                     colorWheel.setImageBitmap(buttonImage);
-                    colorWheel.setOnClickListener(new ChangeColorListener());
+                    colorWheel.setOnClickListener(new ServerBoardActivity.ChangeColorListener());
                 }
             });
         }
@@ -171,11 +138,14 @@ public class BoardActivity extends AppCompatActivity {
         Paint paint = new Paint();
         paint.setColor(color);
         canvas.drawCircle(image.getWidth() / 2, image.getHeight() / 2,
-                          image.getWidth() / 2, paint);
+                image.getWidth() / 2, paint);
     }
 
-    public void close() {
-        Toast.makeText(this, "Connection closed", Toast.LENGTH_SHORT).show();
+    private void setServerListener() {
+        ServerListenThread serverListenTask = new ServerListenThread(BoardServerSocket.getSocket());
+        serverListenTask.start();
+        ServerUpdateThread serverUpdateThread = new ServerUpdateThread(findViewById(R.id.board_holder));
+        serverUpdateThread.start();
     }
 
     private class ChangeColorListener implements View.OnClickListener {

@@ -2,22 +2,29 @@ package com.example.riley.piplace.Messages.Lines;
 
 import android.util.Pair;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * This class represents a stroke by the user that will be sent from the server
  */
 public class Line {
+    private int id;
     private int color;
-    private Set<Pair> pixels;
+    private Set<Pair<Integer, Integer>> pixels;
 
-    public Line(int color) {
+    public Line(int color, int id) {
+        this.id = id;
         this.color = color;
+        this.pixels = new HashSet<>();
     }
 
-    public Line(int color, Set<Pair> pixels) {
-        this.color = color;
-        this.pixels = pixels;
+    /**
+     * Returns the id of the client that submitted this line
+     * @return The id of the client that submitted this line
+     */
+    public int getID() {
+        return id;
     }
 
     /**
@@ -42,8 +49,16 @@ public class Line {
      * @return True if added successfully
      *         False otherwise
      */
-    public boolean addPixel(Pair pixel) {
+    public boolean addPixel(Pair<Integer, Integer> pixel) {
         return pixels.add(pixel);
+    }
+
+    /**
+     * Returns the set of pixels this line covers
+     * @return The set of pixels this line covers
+     */
+    public Set<Pair<Integer, Integer>> getPixels() {
+        return pixels;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.example.riley.piplace.BoardActivity.PlayBoard;
+package com.example.riley.piplace.Client;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,20 +14,14 @@ import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Class that handles adding pixels to the board
+ * Class that handles adding pixels to the board and sends to the server
  */
 public class BoardAddPixelListener implements View.OnTouchListener {
-    private int boardPixelWidth;
-    private int boardPixelHeight;
-
     private BlockingQueue<String> messageQueue;  // Pipeline to server
     private Bitmap pixelBoard;
 
     public BoardAddPixelListener(Bitmap pixelBoard,
-                                 BlockingQueue<String> messageQueue,
-                                 int width, int height) {
-        this.boardPixelWidth = width;
-        this.boardPixelHeight = height;
+                                 BlockingQueue<String> messageQueue) {
         this.messageQueue = messageQueue;
         this.pixelBoard = pixelBoard;
     }
@@ -44,14 +38,17 @@ public class BoardAddPixelListener implements View.OnTouchListener {
     @Override
     public boolean onTouch(View board, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int width = (board.getWidth() / boardPixelWidth) * boardPixelWidth;
-            int height = (board.getHeight() / boardPixelHeight) * boardPixelHeight;
-            int widthStretch = width / boardPixelWidth;
-            int heightStretch = height / boardPixelHeight;
+            // Round the height and weight to be exactly divisible by pixel dimensions
+            int width = (board.getWidth() / BoardActivity.BOARD_PIXEL_WIDTH) * BoardActivity.BOARD_PIXEL_WIDTH;
+            int height = (board.getHeight() / BoardActivity.BOARD_PIXEL_HEIGHT) * BoardActivity.BOARD_PIXEL_HEIGHT;
 
-            int x = boardPixelWidth * Math.round(event.getX()) / width;
-            int y = boardPixelHeight * Math.round(event.getY()) / height;
+            int widthStretch = width / BoardActivity.BOARD_PIXEL_WIDTH;
+            int heightStretch = height / BoardActivity.BOARD_PIXEL_HEIGHT;
 
+            int x = BoardActivity.BOARD_PIXEL_WIDTH * Math.round(event.getX()) / width;
+            int y = BoardActivity.BOARD_PIXEL_HEIGHT * Math.round(event.getY()) / height;
+
+            // Draw the change on the local board
             Canvas canvas = new Canvas(pixelBoard);
             int color = BoardActivity.getColor();
             Paint paint = new Paint();
@@ -61,10 +58,14 @@ public class BoardAddPixelListener implements View.OnTouchListener {
                     x * widthStretch + widthStretch,
                     y * heightStretch + heightStretch,
                     paint);
+
+            // Alert the UI to update the board
             Message message = new Message();
             message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
             BoardActivity.updateHandler.sendMessage(message);
-            String changeMessage = String.format(Locale.US, "%3d %3d %3d %3d %3d|", x, y, Color.red(color), Color.green(color), Color.blue(color));
+
+            // Send the change to the server
+            String changeMessage = String.format(Locale.US, color + " 1 " + x + " " + y + " ");
             messageQueue.add(changeMessage);
         } else {
             board.performClick();

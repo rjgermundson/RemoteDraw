@@ -2,7 +2,7 @@ package com.example.riley.piplace.MainActivity;
 
 import android.os.AsyncTask;
 
-import com.example.riley.piplace.BoardActivity.CommunicateTask.BoardSocket;
+import com.example.riley.piplace.Client.CommunicateTask.BoardClientSocket;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -36,6 +36,7 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
         try {
             System.err.println("Connecting");
             this.socket = connectToHost(address, port);
+            System.out.println("Finished connecting");
         } catch (IOException e) {
             e.printStackTrace();
             this.socket = null;
@@ -47,11 +48,19 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         if (result) {
-            BoardSocket.setSocket(socket);
-            mainActivity.get().openBoard(host);
+            System.out.println("Post connected");
+            BoardClientSocket.setSocket(socket);
+            mainActivity.get().openClientBoard();
         } else {
+            BoardClientSocket.setSocket(null);
             mainActivity.get().failedToOpenBoard(host);
         }
+    }
+
+    @Override
+    protected void onCancelled(Boolean aBoolean) {
+        super.onCancelled(aBoolean);
+        System.out.println("CANCELLED");
     }
 
     /**
@@ -64,7 +73,7 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
      */
     private Socket connectToHost(InetAddress address, int port) throws IOException {
         Socket socket = new Socket();
-        socket.connect(new InetSocketAddress(address, port), 100);
+        socket.connect(new InetSocketAddress(address, port), 300);
         if (socket.isOutputShutdown()) {
             closeSocket();
             return null;

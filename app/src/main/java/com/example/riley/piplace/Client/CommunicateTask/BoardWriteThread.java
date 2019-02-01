@@ -1,8 +1,6 @@
-package com.example.riley.piplace.BoardActivity.CommunicateTask;
+package com.example.riley.piplace.Client.CommunicateTask;
 
-import android.os.AsyncTask;
-
-import com.example.riley.piplace.BoardActivity.BoardActivity;
+import android.app.Activity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,13 +12,13 @@ import java.util.concurrent.BlockingQueue;
 /**
  * This class is meant to handle the communication from the client to the server
  */
-public class BoardWriteTask extends AsyncTask<Void, Void, Void> {
-    private WeakReference<BoardActivity> activity;
+public class BoardWriteThread extends Thread {
+    private WeakReference<Activity> activity;
     private Socket socket;
     private OutputStream output;
     private BlockingQueue<String> messages;
 
-    private BoardWriteTask(BoardActivity activity, Socket socket,
+    private BoardWriteThread(Activity activity, Socket socket,
                              OutputStream output, BlockingQueue<String> messageQueue) {
         this.activity = new WeakReference<>(activity);
         this.socket = socket;
@@ -37,7 +35,7 @@ public class BoardWriteTask extends AsyncTask<Void, Void, Void> {
      *         null if socket.notConnected || socket == null
      *         null if messageQueue == null
      */
-    public static BoardWriteTask createTask(BoardActivity activity, Socket socket, BlockingQueue<String> messageQueue) {
+    public static BoardWriteThread createTask(Activity activity, Socket socket, BlockingQueue<String> messageQueue) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -53,11 +51,11 @@ public class BoardWriteTask extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
             return null;
         }
-        return new BoardWriteTask(activity, socket, output, messageQueue);
+        return new BoardWriteThread(activity, socket, output, messageQueue);
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    public void run() {
         while (isConnected()) {
             try {
                 String message = messages.take();
@@ -67,8 +65,6 @@ public class BoardWriteTask extends AsyncTask<Void, Void, Void> {
             }
         }
         closeSocket();
-        activity.get().close();
-        return null;
     }
 
     /**
