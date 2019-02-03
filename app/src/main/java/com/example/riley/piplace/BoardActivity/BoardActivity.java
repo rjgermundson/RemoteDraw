@@ -21,6 +21,7 @@ import com.example.riley.piplace.Client.CommunicateTask.BoardClientSocket;
 import com.example.riley.piplace.Client.CommunicateTask.BoardWriteThread;
 import com.example.riley.piplace.Client.BoardAddPixelListener;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
+import com.example.riley.piplace.Messages.Lines.Line;
 import com.example.riley.piplace.R;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class BoardActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.board_activity);
-        BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+        BlockingQueue<Line> messageQueue = new LinkedBlockingQueue<>();
         if (!setWriteTask(messageQueue)) {
             close();
         }
@@ -82,7 +83,7 @@ public class BoardActivity extends AppCompatActivity {
      * @return True if successful
      *         False otherwise
      */
-    private boolean setWriteTask(BlockingQueue<String> messageQueue) {
+    private boolean setWriteTask(BlockingQueue<Line> messageQueue) {
         Socket socket = BoardClientSocket.getSocket();
         BoardWriteThread writeTask = BoardWriteThread.createThread(this, socket, messageQueue);
         if (writeTask != null) {
@@ -113,7 +114,7 @@ public class BoardActivity extends AppCompatActivity {
      * rendered
      * @param messageQueue Queue that serves as pipe for messages to server
      */
-    private void setBoardListener(final BlockingQueue<String> messageQueue) {
+    private void setBoardListener(final BlockingQueue<Line> messageQueue) {
         final BoardHolder boardHolder = findViewById(R.id.board_holder);
         ViewTreeObserver boardTreeObserver = boardHolder.getViewTreeObserver();
         if (boardTreeObserver.isAlive()) {

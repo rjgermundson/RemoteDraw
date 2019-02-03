@@ -5,10 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Message;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.riley.piplace.BoardActivity.BoardActivity;
+import com.example.riley.piplace.Messages.Lines.Line;
 
 import java.util.Locale;
 import java.util.concurrent.BlockingQueue;
@@ -17,11 +19,11 @@ import java.util.concurrent.BlockingQueue;
  * Class that handles adding pixels to the board and sends to the server
  */
 public class BoardAddPixelListener implements View.OnTouchListener {
-    private BlockingQueue<String> messageQueue;  // Pipeline to server
+    private BlockingQueue<Line> messageQueue;  // Pipeline to server
     private Bitmap pixelBoard;
 
     public BoardAddPixelListener(Bitmap pixelBoard,
-                                 BlockingQueue<String> messageQueue) {
+                                 BlockingQueue<Line> messageQueue) {
         this.messageQueue = messageQueue;
         this.pixelBoard = pixelBoard;
     }
@@ -65,8 +67,9 @@ public class BoardAddPixelListener implements View.OnTouchListener {
             BoardActivity.updateHandler.sendMessage(message);
 
             // Send the change to the server
-            String changeMessage = String.format(Locale.US, color + " 1 " + x + " " + y + " ");
-            messageQueue.add(changeMessage);
+            Line line = new Line(color, 0);
+            line.addPixel(new Pair<>(x, y));
+            messageQueue.add(line);
         } else {
             board.performClick();
         }

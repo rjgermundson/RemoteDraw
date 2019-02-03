@@ -4,15 +4,15 @@ import android.graphics.Bitmap;
 import android.util.Pair;
 
 import com.example.riley.piplace.Messages.Lines.Line;
+import com.example.riley.piplace.Utility;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -22,48 +22,41 @@ public class ServerPerClientThread extends Thread {
     private Queue<Line> lines = new LinkedList<>();
     private int clientID;
     private Socket socket;
-    private OutputStream outputStream;
-    private Scanner input;
+    private OutputStream output;
+    private DataInputStream input;
 
     ServerPerClientThread(Socket socket, int id) {
         this.socket = socket;
         clientID = clientID;
         try {
-            outputStream = socket.getOutputStream();
+            output = socket.getOutputStream();
         } catch (IOException e) {
-            System.out.println("FAILED TO GET OUTPUT STREAM");
             closeSocket();
         }
         try {
-            this.input = new Scanner(socket.getInputStream());
+            this.input = new DataInputStream(socket.getInputStream());
         } catch (IOException inputException) {
-            System.out.println("FAILED TO GET INPUTSTREAM");
             try {
-                outputStream.write(-1);
+                output.write(-1);
             } catch (IOException e) {
-                System.out.println("FAILED TO WRITE FAILURE");
                 closeSocket();
             }
         }
-        System.out.println("CREATED SPCTask");
     }
 
     @Override
     public void run() {
         super.run();
-        System.out.println("DOING IN BACK");
         sendBoard();
-        System.out.println("SENT BOARD");
         while (isConnected()) {
             // Listen to the client for action
             try {
                 receive();
+                if (lines.size() > 0) {
+                    send(lines.remove());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            if (lines.size() > 0) {
-                System.out.println("SENDING");
-                send(lines.remove());
             }
         }
         try {
@@ -76,24 +69,28 @@ public class ServerPerClientThread extends Thread {
     /**
      * Check to see if the client has made any actions
      */
-    private void receive() {
-        int color;
-        try {
-            color = input.nextInt();
-        } catch (Exception e) {
+    private void receive() throws IOException {
+        int color = 0;
+        int count;
+        if (input.available() > 0) {
+            color = input.readInt();
+            count = input.readInt();
+            System.out.println("COUNT: " + count);
+        } else {
             return;
         }
+
         // Construct the line that the client drew
         Line line = new Line(color, clientID);
-        int count = input.nextInt();
         if (count == 0) {
             // Count should never be zero
             // Todo: Send error flag
             return;
         }
         for (int i = 0; i < count; i++) {
-            int x = input.nextInt();
-            int y = input.nextInt();
+            int x = input.readInt();
+            int y = input.readInt();
+            System.out.println(x + ", " + y);
             line.addPixel(new Pair<>(x, y));
         }
         ServerUpdateThread.addLine(line);
@@ -111,25 +108,8 @@ public class ServerPerClientThread extends Thread {
      * Writes the given line to the client in the proper format
      * @param line The line to write to the client
      */
-    private void send(Line line) {
-        StringBuilder builder = new StringBuilder();
-        Set<Pair<Integer, Integer>> pixels = line.getPixels();
-        builder.append(line.getColor());
-        builder.append(" ");
-        builder.append(pixels.size());
-        builder.append(" ");
-        for (Pair p : pixels) {
-            builder.append(p.first);
-            builder.append(" ");
-            builder.append(p.second);
-            builder.append(" ");
-        }
-        try {
-            outputStream.write(builder.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-            closeSocket();
-        }
+    private void send(Line line) throws IOException {
+        output.write(line.getBytes());
     }
 
     /**
@@ -142,22 +122,13 @@ public class ServerPerClientThread extends Thread {
         try {
             byte[] boardBytes = byteStream.toByteArray();
             // Send integer length as byte array
-            outputStream.write(intToBytes(boardBytes.length));
+            output.write(Utility.intToBytes(boardBytes.length));
             // Send bitmap
-            outputStream.write(boardBytes);
+            output.write(boardBytes);
         } catch (IOException e) {
             closeSocket();
         }
         LockedBitmap.release();
-    }
-
-    private byte[] intToBytes(int integer) {
-        byte[] result = new byte[4];
-        for (int i = 0; i < 4; i++) {
-            result[4 - i - 1] = (Integer.valueOf(integer % 1024).byteValue());
-            integer = integer >> 8;
-        }
-        return result;
     }
 
     /**

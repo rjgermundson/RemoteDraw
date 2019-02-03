@@ -2,6 +2,8 @@ package com.example.riley.piplace.Client.CommunicateTask;
 
 import android.app.Activity;
 
+import com.example.riley.piplace.Messages.Lines.Line;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
@@ -15,10 +17,10 @@ public class BoardWriteThread extends Thread {
     private WeakReference<Activity> activity;
     private Socket socket;
     private OutputStream output;
-    private BlockingQueue<String> messages;
+    private BlockingQueue<Line> messages;
 
     private BoardWriteThread(Activity activity, Socket socket,
-                             OutputStream output, BlockingQueue<String> messageQueue) {
+                             OutputStream output, BlockingQueue<Line> messageQueue) {
         this.activity = new WeakReference<>(activity);
         this.socket = socket;
         this.output = output;
@@ -34,7 +36,7 @@ public class BoardWriteThread extends Thread {
      *         null if socket.notConnected || socket == null
      *         null if messageQueue == null
      */
-    public static BoardWriteThread createThread(Activity activity, Socket socket, BlockingQueue<String> messageQueue) {
+    public static BoardWriteThread createThread(Activity activity, Socket socket, BlockingQueue<Line> messageQueue) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -56,7 +58,7 @@ public class BoardWriteThread extends Thread {
     public void run() {
         while (isConnected()) {
             try {
-                String message = messages.take();
+                Line message = messages.take();
                 send(message);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -99,17 +101,16 @@ public class BoardWriteThread extends Thread {
 
     /**
      * Writes to the given host
-     * @param message Message to write to host
+     * @param line Line to write to host
      * @return True if message sent successfully
      *         False otherwise
      */
-    private boolean send(String message) {
-        if (message == null) {
+    private boolean send(Line line) {
+        if (line == null) {
             return true;
         }
-        byte[] byteMessage = message.getBytes();
         try {
-            output.write(byteMessage);
+            output.write(line.getBytes());
         } catch (IOException e) {
             return false;
         }

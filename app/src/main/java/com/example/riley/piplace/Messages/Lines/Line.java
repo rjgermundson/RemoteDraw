@@ -2,6 +2,8 @@ package com.example.riley.piplace.Messages.Lines;
 
 import android.util.Pair;
 
+import com.example.riley.piplace.Utility;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ import java.util.Set;
  * This class represents a stroke by the user that will be sent from the server
  */
 public class Line {
+    private static final int INTEGER_BYTE_COUNT = 4;
     private int id;
     private int color;
     private Set<Pair<Integer, Integer>> pixels;
@@ -69,15 +72,19 @@ public class Line {
         return pixels.size();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (Pair p : pixels) {
-            builder.append(p.first);
-            builder.append(" ");
-            builder.append(p.second);
-            builder.append(" ");
+    public byte[] getBytes() {
+        byte[] result = new byte[INTEGER_BYTE_COUNT * 2 + pixels.size() * INTEGER_BYTE_COUNT * 2];
+        System.arraycopy(Utility.intToBytes(color), 0, result, 0, INTEGER_BYTE_COUNT);
+        System.arraycopy(Utility.intToBytes(pixels.size()), 0, result, INTEGER_BYTE_COUNT, INTEGER_BYTE_COUNT);
+
+        int count = 0;
+        for (Pair<Integer, Integer> pixel : pixels) {
+            System.arraycopy(Utility.intToBytes(pixel.first), 0, result, INTEGER_BYTE_COUNT * (2 + count), INTEGER_BYTE_COUNT);
+            count++;
+            System.arraycopy(Utility.intToBytes(pixel.second), 0, result, INTEGER_BYTE_COUNT * (2 + count), INTEGER_BYTE_COUNT);
+            count++;
         }
-        return builder.toString();
+
+        return result;
     }
 }

@@ -64,7 +64,7 @@ public class ServerListenThread extends Thread {
     public static void sendLine(Line line) {
         for (int i = 0; i < clients.length; i++) {
             if (i != line.getID() && clients[i] != null
-                && !clients[i].isAlive()) {
+                && clients[i].isAlive()) {
                 clients[i].sendLine(line);
             }
         }
