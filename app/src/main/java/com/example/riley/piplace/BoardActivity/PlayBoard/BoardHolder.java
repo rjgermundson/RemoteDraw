@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 
+import com.example.riley.piplace.BoardActivity.BoardActivity;
+
 /**
  * This class represents a ViewGroup consisting of a view
  * set on top of a lower view
@@ -85,6 +87,9 @@ public class BoardHolder extends LinearLayout {
         if (timeDiff < CLICK_TIMEOUT) {
             // Double click should be handled by DrawBoard
             lastClickTime = Integer.MIN_VALUE;
+            return false;
+        }
+        if (!BoardActivity.isDrag) {
             return false;
         }
         if (event.getPointerCount() >= 2) {

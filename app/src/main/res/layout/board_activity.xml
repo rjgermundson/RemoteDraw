@@ -30,6 +30,7 @@
             android:layout_gravity="bottom"
             android:clipToPadding="false">
 
+
             <ImageButton
                 android:id="@+id/color_wheel"
                 android:background="@color/clear"
@@ -39,6 +40,15 @@
                 android:visibility="visible"
                 android:scaleType="fitCenter"
                 android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/toggle_draw"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toEndOf="@+id/color_wheel"
+                android:elevation="40dp"
+                android:visibility="visible"
+                android:layout_marginStart="50dp"/>
 
             <LinearLayout
                 android:background="@color/colorPrimaryDark"

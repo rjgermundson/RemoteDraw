@@ -1,9 +1,10 @@
-package com.example.riley.piplace.Server;
+package com.example.riley.piplace.Server.CommunicateTask;
 
 import android.graphics.Bitmap;
 import android.util.Pair;
 
 import com.example.riley.piplace.Messages.Lines.Line;
+import com.example.riley.piplace.Server.LockedBitmap;
 import com.example.riley.piplace.Utility;
 
 import java.io.ByteArrayOutputStream;
@@ -13,7 +14,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Set;
 
 /**
  * This task handles a single client connection to this board

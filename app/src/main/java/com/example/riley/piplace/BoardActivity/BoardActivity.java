@@ -12,6 +12,7 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class BoardActivity extends AppCompatActivity {
     public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener
     public static final int BOARD_PIXEL_WIDTH = 64;
     public static final int BOARD_PIXEL_HEIGHT = 64;
+    public static boolean isDrag = true;
     private static int color = Color.RED;
 
     @Override
@@ -48,6 +50,13 @@ public class BoardActivity extends AppCompatActivity {
         }
         setBoardListener(messageQueue);
         setColorWheelListener();
+        Button button = findViewById(R.id.toggle_draw);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isDrag = !isDrag;
+            }
+        });
     }
 
     @Override

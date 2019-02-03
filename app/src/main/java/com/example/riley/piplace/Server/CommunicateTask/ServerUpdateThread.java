@@ -1,4 +1,4 @@
-package com.example.riley.piplace.Server;
+package com.example.riley.piplace.Server.CommunicateTask;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.Messages.Lines.Line;
+import com.example.riley.piplace.Server.LockedBitmap;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.BlockingQueue;

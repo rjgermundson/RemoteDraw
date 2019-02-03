@@ -19,11 +19,11 @@ import android.widget.TextView;
 import com.example.riley.piplace.BoardActivity.ColorPicker.ColorPickerDialog;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
 import com.example.riley.piplace.R;
-import com.example.riley.piplace.Server.BoardServerSocket;
+import com.example.riley.piplace.Server.CommunicateTask.BoardServerSocket;
 import com.example.riley.piplace.Server.LockedBitmap;
 import com.example.riley.piplace.Server.ServerAddPixelListener;
-import com.example.riley.piplace.Server.ServerListenThread;
-import com.example.riley.piplace.Server.ServerUpdateThread;
+import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
+import com.example.riley.piplace.Server.CommunicateTask.ServerUpdateThread;
 
 
 public class ServerBoardActivity extends AppCompatActivity {

@@ -39,7 +39,8 @@ public class BoardAddPixelListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View board, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN
+            || event.getAction() == MotionEvent.ACTION_MOVE) {
             // Round the height and weight to be exactly divisible by pixel dimensions
             int width = (board.getWidth() / BoardActivity.BOARD_PIXEL_WIDTH) * BoardActivity.BOARD_PIXEL_WIDTH;
             int height = (board.getHeight() / BoardActivity.BOARD_PIXEL_HEIGHT) * BoardActivity.BOARD_PIXEL_HEIGHT;

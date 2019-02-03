@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.riley.piplace.BoardActivity.BoardActivity;
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.R;
-import com.example.riley.piplace.Server.HostTask;
+import com.example.riley.piplace.Server.CommunicateTask.HostTask;
 
 import java.math.BigInteger;
 import java.net.InetAddress;

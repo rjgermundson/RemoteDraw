@@ -1,4 +1,4 @@
-package com.example.riley.piplace.Server;
+package com.example.riley.piplace.Server.CommunicateTask;
 
 import java.net.ServerSocket;
 

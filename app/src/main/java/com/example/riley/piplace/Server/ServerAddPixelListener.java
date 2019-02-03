@@ -11,6 +11,7 @@ import android.view.View;
 import com.example.riley.piplace.BoardActivity.BoardActivity;
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.Messages.Lines.Line;
+import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
 
 public class ServerAddPixelListener implements View.OnTouchListener {
     private int boardPixelWidth;

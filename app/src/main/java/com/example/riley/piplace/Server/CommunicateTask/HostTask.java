@@ -1,8 +1,9 @@
-package com.example.riley.piplace.Server;
+package com.example.riley.piplace.Server.CommunicateTask;
 
 import android.os.AsyncTask;
 
 import com.example.riley.piplace.MainActivity.MainActivity;
+import com.example.riley.piplace.Server.CommunicateTask.BoardServerSocket;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
