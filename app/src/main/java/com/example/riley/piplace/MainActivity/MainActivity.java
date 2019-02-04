@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.riley.piplace.BoardActivity.BoardActivity;
+import com.example.riley.piplace.BoardActivity.ClientBoardActivity;
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.R;
 import com.example.riley.piplace.Server.CommunicateTask.HostTask;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 hostIP = InetAddress.getByAddress(ipBytes).getHostAddress();
                 HostTask task = new HostTask(mainActivity, hostIP, PORT);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
 
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openClientBoard() {
-        startActivity(new Intent(this, BoardActivity.class));
+        startActivity(new Intent(this, ClientBoardActivity.class));
     }
 
     public void openServerBoard(String IP, int port) {

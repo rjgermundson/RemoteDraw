@@ -16,6 +16,8 @@ import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
 public class ServerAddPixelListener implements View.OnTouchListener {
     private int boardPixelWidth;
     private int boardPixelHeight;
+    private int prevX;
+    private int prevY;
 
     public ServerAddPixelListener(int width, int height) {
         this.boardPixelWidth = width;
@@ -33,19 +35,21 @@ public class ServerAddPixelListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View board, MotionEvent event) {
+        int width = (board.getWidth() / boardPixelWidth) * boardPixelWidth;
+        int height = (board.getHeight() / boardPixelHeight) * boardPixelHeight;
+        int widthStretch = width / boardPixelWidth;
+        int heightStretch = height / boardPixelHeight;
+
+        int x = boardPixelWidth * Math.round(event.getX()) / width;
+        int y = boardPixelHeight * Math.round(event.getY()) / height;
+        int color = BoardActivity.getColor();
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            int width = (board.getWidth() / boardPixelWidth) * boardPixelWidth;
-            int height = (board.getHeight() / boardPixelHeight) * boardPixelHeight;
-            int widthStretch = width / boardPixelWidth;
-            int heightStretch = height / boardPixelHeight;
-
-            int x = boardPixelWidth * Math.round(event.getX()) / width;
-            int y = boardPixelHeight * Math.round(event.getY()) / height;
-
             // Draw the given pixel onto the board
+            prevX = x;
+            prevY = y;
             Bitmap pixelBoard = LockedBitmap.get();
             Canvas canvas = new Canvas(pixelBoard);
-            int color = BoardActivity.getColor();
             Paint paint = new Paint();
             paint.setColor(color);
             canvas.drawRect(x * widthStretch,
@@ -56,12 +60,43 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             Line line = new Line(color, -1);
             line.addPixel(new Pair<>(x, y));
             ServerListenThread.sendLine(line);
-            LockedBitmap.release();
 
             // Alert the UI to update the board
             Message message = new Message();
             message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
             ServerBoardActivity.updateHandler.sendMessage(message);
+            LockedBitmap.release();
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE && event.getHistorySize() > 0) {
+            Bitmap pixelBoard = LockedBitmap.get();
+            Canvas canvas = new Canvas(pixelBoard);
+            Paint paint = new Paint();
+            paint.setColor(color);
+            Line line = new Line(color, -1);
+            line.addPixel(new Pair<>(prevX, prevY));
+            while (prevX != x || prevY != y) {
+                if (prevX < x) {
+                    prevX++;
+                } else if (prevX > x) {
+                    prevX--;
+                }
+                if (prevY < y) {
+                    prevY++;
+                } else if (prevY > y) {
+                    prevY--;
+                }
+                canvas.drawRect(prevX * widthStretch,
+                        prevY * heightStretch,
+                        prevX * widthStretch + widthStretch,
+                        prevY * heightStretch + heightStretch,
+                        paint);
+                line.addPixel(new Pair<>(prevX, prevY));
+            }
+            ServerListenThread.sendLine(line);
+
+            Message message = new Message();
+            message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
+            ServerBoardActivity.updateHandler.sendMessage(message);
+            LockedBitmap.release();
         } else {
             board.performClick();
         }

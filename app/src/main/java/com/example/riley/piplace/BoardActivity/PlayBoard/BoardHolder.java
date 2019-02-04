@@ -23,6 +23,7 @@ import com.example.riley.piplace.BoardActivity.BoardActivity;
 public class BoardHolder extends LinearLayout {
     private static final long CLICK_TIMEOUT =
             Double.valueOf(ViewConfiguration.getDoubleTapTimeout() / 1.3).longValue();
+    private static final float ACCELERATION = 1.3f;
 
     private DrawBoard drawBoard;
     private boolean zooming = false;
@@ -97,7 +98,7 @@ public class BoardHolder extends LinearLayout {
             zooming = true;
             return true;
         } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE
-                    && !zooming) {
+                   && !zooming) {
             // Dragging to move around screen
             return true;
         }
@@ -134,7 +135,7 @@ public class BoardHolder extends LinearLayout {
                 deltaX = event.getX() - event.getHistoricalX(event.getActionIndex());
                 deltaY = event.getY() - event.getHistoricalY(event.getActionIndex());
             }
-            translate(drawBoard, Math.round(deltaX), Math.round(deltaY));
+            translate(drawBoard, Math.round(deltaX * ACCELERATION), Math.round(deltaY * ACCELERATION));
             return true;
         }
         return true;

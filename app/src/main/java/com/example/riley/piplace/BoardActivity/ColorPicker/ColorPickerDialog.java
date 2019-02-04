@@ -41,6 +41,7 @@ public class ColorPickerDialog extends DialogFragment {
             for (int i = 0; i < typedArray.length(); i++) {
                 colors[i] = typedArray.getColor(i, 0);
             }
+            typedArray.recycle();
         } catch (NullPointerException e) {
             return null;
         }

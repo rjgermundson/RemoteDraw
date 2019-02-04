@@ -41,7 +41,7 @@
                 android:scaleType="fitCenter"
                 android:layout_centerHorizontal="true" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/toggle_draw"
                 android:layout_width="50dp"
                 android:layout_height="50dp"

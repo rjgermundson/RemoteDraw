@@ -75,7 +75,6 @@ public class BoardReadThread extends Thread {
 
     private void receive() throws IOException {
         if (input.available() > 0) {
-            System.out.println("Getting dots");
             int imageWidth = bitmap.getWidth();
             int imageHeight = bitmap.getHeight();
             int widthStretch = imageWidth / BoardActivity.BOARD_PIXEL_WIDTH;

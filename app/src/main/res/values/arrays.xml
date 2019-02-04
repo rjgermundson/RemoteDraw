@@ -7,7 +7,7 @@
         <item>@color/blue</item>
         <item>@color/cyan</item>
         <item>@color/green</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
     </array>
-
-
 </resources>
