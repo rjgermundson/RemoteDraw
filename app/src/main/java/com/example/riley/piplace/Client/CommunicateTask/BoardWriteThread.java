@@ -31,6 +31,9 @@ public class BoardWriteThread extends Thread {
      * Return the instance of a BoardCommunicateTask
      * Must be called after the socket is set
      * and message queue is set
+     * @param activity Activity this thread is created in
+     * @param socket Socket this thread will use for communication
+     * @param messageQueue
      * @return new BoardCommunicate task if each component is valid
      *         null if activity == null
      *         null if socket.notConnected || socket == null

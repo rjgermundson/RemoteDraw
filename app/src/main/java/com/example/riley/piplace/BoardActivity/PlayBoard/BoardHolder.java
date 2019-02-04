@@ -26,6 +26,7 @@ public class BoardHolder extends LinearLayout {
     private static final float ACCELERATION = 1.3f;
 
     private DrawBoard drawBoard;
+    private Bitmap drawBitmap;
     private boolean zooming = false;
     private float prevPinchDistance = -1;  // -1 if no pinch occurring
     private long lastClickTime = -1;  // -1 Most recent was double click
@@ -51,13 +52,10 @@ public class BoardHolder extends LinearLayout {
      * @param image The image to be used for this board
      */
     public void setImage(Bitmap image) {
-        drawBoard.setImageBitmap(image);
-        int margin = (this.getMeasuredWidth() - image.getWidth()) / 2;
-        LayoutParams layoutParams = new LayoutParams(image.getWidth(), image.getHeight());
-        layoutParams.setMargins(margin, 0, margin, 0);
-        layoutParams.gravity = Gravity.CENTER;
-        drawBoard.setLayoutParams(layoutParams);
-        this.invalidate();
+        drawBitmap = image;
+    }
+
+    public void redraw() {
         drawBoard.invalidate();
     }
 
@@ -73,6 +71,8 @@ public class BoardHolder extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        System.out.println("LEFT: " + left);
+        System.out.println("TOP: " + top);
         validate();
     }
 
@@ -141,6 +141,18 @@ public class BoardHolder extends LinearLayout {
         return true;
     }
 
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        drawBoard.setImageBitmap(drawBitmap);
+        int margin = (this.getMeasuredWidth() - drawBitmap.getWidth()) / 2;
+        LayoutParams layoutParams = new LayoutParams(drawBitmap.getWidth(), drawBitmap.getHeight());
+        layoutParams.setMargins(margin, 0, margin, 0);
+        layoutParams.gravity = Gravity.CENTER;
+        drawBoard.setLayoutParams(layoutParams);
+        drawBoard.invalidate();
+    }
+
     /**
      * Translates the given view
      * @param view View to translate
@@ -148,6 +160,8 @@ public class BoardHolder extends LinearLayout {
      * @param deltaY Change in y direction (positive down)
      */
     private void translate(View view, int deltaX, int deltaY) {
+        System.out.println("TRANSLATING");
+
         int widthExcess = Math.round(drawBoard.getScaleX() * drawBoard.getMeasuredWidth() - drawBoard.getMeasuredWidth());
         int heightExcess = Math.round(drawBoard.getScaleY() * drawBoard.getMeasuredHeight() - drawBoard.getMeasuredHeight());
         int widthMargin = (this.getMeasuredWidth() - drawBoard.getMeasuredWidth()) / 2;
@@ -225,7 +239,7 @@ public class BoardHolder extends LinearLayout {
      */
     private class DrawBoard extends android.support.v7.widget.AppCompatImageView {
         private static final float MAX_SCALE = 10.0f;
-        private static final float MIN_SCALE = 1.0f;
+        private static final float MIN_SCALE = 0.4f;
         private float scale;
 
         private DrawBoard(Context c) {

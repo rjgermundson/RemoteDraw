@@ -2,6 +2,8 @@ package com.example.riley.piplace.BoardActivity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -21,6 +23,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientBoardActivity extends BoardActivity {
+    BlockingQueue<Line> messageQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class ClientBoardActivity extends BoardActivity {
                 isDrag = !isDrag;
             }
         });
+        button.performClick();
     }
 
     @Override
@@ -77,13 +81,14 @@ public class ClientBoardActivity extends BoardActivity {
 
     /**
      * Initialize task meant for reading from the server for the current board
-     * @param bitmap Map of the client's board
+     * @param boardHolder BoardHolder for this client. Needs to have board initialized once read
+     * @param messageQueue Queue that serves as pipe for messages to server
      * @return True if successful
      *         False otherwise
      */
-    private boolean setReadTask(Bitmap bitmap) {
+    private boolean setReadTask(BoardHolder boardHolder, BlockingQueue<Line> messageQueue) {
         Socket socket = BoardClientSocket.getSocket();
-        BoardReadThread readTask = BoardReadThread.createThread(this, socket, bitmap);
+        BoardReadThread readTask = BoardReadThread.createThread(this, socket, boardHolder, messageQueue);
         if (readTask != null) {
             readTask.start();
             return true;
@@ -104,14 +109,11 @@ public class ClientBoardActivity extends BoardActivity {
                 @Override
                 public void onGlobalLayout() {
                     boardHolder.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    Bitmap pixelBoard = getStartBoard(boardHolder);
                     UpdateBoardHandler.initialize(boardHolder);
                     BoardActivity.updateHandler = UpdateBoardHandler.getInstance();
-                    if (!setReadTask(pixelBoard)) {
+                    if (!setReadTask(boardHolder, messageQueue)) {
                         close();
                     }
-                    boardHolder.setImage(pixelBoard);
-                    boardHolder.setImageListener(new BoardAddPixelListener(pixelBoard, messageQueue));
                 }
             });
         }

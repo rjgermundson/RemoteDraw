@@ -20,8 +20,9 @@ import com.example.riley.piplace.R;
 
 public class BoardActivity extends AppCompatActivity {
     public static final int MESSAGE_REFRESH_BOARD = 20;
-    public static final int BOARD_PIXEL_WIDTH = 64;
-    public static final int BOARD_PIXEL_HEIGHT = 64;
+    public static final int MESSAGE_SET_BOARD = 21;
+    public static final int BOARD_PIXEL_WIDTH = 256;
+    public static final int BOARD_PIXEL_HEIGHT = 256;
     public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener
     public static boolean isDrag = true;
     static int color = Color.RED;
@@ -145,6 +146,8 @@ public class BoardActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == MESSAGE_REFRESH_BOARD) {
+                boardHolder.redraw();
+            } else if (msg.what == MESSAGE_SET_BOARD) {
                 boardHolder.invalidate();
             }
         }

@@ -35,6 +35,7 @@ public class ServerAddPixelListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View board, MotionEvent event) {
+
         int width = (board.getWidth() / boardPixelWidth) * boardPixelWidth;
         int height = (board.getHeight() / boardPixelHeight) * boardPixelHeight;
         int widthStretch = width / boardPixelWidth;
@@ -97,8 +98,6 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
             ServerBoardActivity.updateHandler.sendMessage(message);
             LockedBitmap.release();
-        } else {
-            board.performClick();
         }
         return true;
     }

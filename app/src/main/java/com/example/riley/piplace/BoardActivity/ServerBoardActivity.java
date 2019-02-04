@@ -95,6 +95,7 @@ public class ServerBoardActivity extends BoardActivity {
                     UpdateBoardHandler.initialize(boardHolder);
                     ServerBoardActivity.updateHandler = UpdateBoardHandler.getInstance();
                     boardHolder.setImage(pixelBoard);
+                    boardHolder.invalidate();
                     boardHolder.setImageListener(new ServerAddPixelListener(BOARD_PIXEL_WIDTH,
                                                                             BOARD_PIXEL_HEIGHT));
                 }

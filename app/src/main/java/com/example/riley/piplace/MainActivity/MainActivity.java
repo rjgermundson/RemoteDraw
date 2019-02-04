@@ -86,14 +86,13 @@ public class MainActivity extends AppCompatActivity {
             }
             byte[] ipBytes = BigInteger.valueOf(ip).toByteArray();
 
-            String hostIP;
+            String hostIP = "";
             try {
                 hostIP = InetAddress.getByAddress(ipBytes).getHostAddress();
                 HostTask task = new HostTask(mainActivity, hostIP, PORT);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
-
                 failedToHost();
             }
         }

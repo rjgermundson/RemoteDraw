@@ -8,6 +8,9 @@ import android.graphics.Paint;
 import android.os.Message;
 
 import com.example.riley.piplace.BoardActivity.BoardActivity;
+import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
+import com.example.riley.piplace.Client.BoardAddPixelListener;
+import com.example.riley.piplace.Messages.Lines.Line;
 import com.example.riley.piplace.Utility;
 
 import java.io.DataInputStream;
@@ -15,7 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.Socket;
-import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This class is meant to handle communication from the server to the client
@@ -26,12 +29,16 @@ public class BoardReadThread extends Thread {
     private Socket socket;
     private DataInputStream input;
     private Bitmap bitmap;
+    private BoardHolder boardHolder;
+    private BlockingQueue<Line> messageQueue;
 
-    private BoardReadThread(Activity activity, Socket socket, InputStream inputStream, Bitmap bitmap) {
+    private BoardReadThread(Activity activity, Socket socket, InputStream inputStream,
+                            BoardHolder boardHolder, BlockingQueue<Line> messageQueue) {
         this.activity = new WeakReference<>(activity);
         this.socket = socket;
         this.input = new DataInputStream(inputStream);
-        this.bitmap = bitmap;
+        this.boardHolder = boardHolder;
+        this.messageQueue = messageQueue;
     }
 
     /**
@@ -39,12 +46,14 @@ public class BoardReadThread extends Thread {
      * Must be called after the socket is set
      * @param activity BoardActivity this task is listening for
      * @param socket Socket to communicate on
-     * @param bitmap Bitmap representing the client's board
+     * @param boardHolder BoardHolder that will hold client's board once initial bitmap received
+     * @param messageQueue Queue that serves as pipe for messages to server
      * @return new BoardCommunicate task if each component is valid
      *         null if activity == null
      *         null if socket.notConnected || socket == null
      */
-    public static BoardReadThread createThread(Activity activity, Socket socket, Bitmap bitmap) {
+    public static BoardReadThread createThread(Activity activity, Socket socket, BoardHolder boardHolder,
+                                               BlockingQueue<Line> messageQueue) {
         if (activity == null) {
             return null;
         } else if (!socket.isConnected()) {
@@ -57,7 +66,7 @@ public class BoardReadThread extends Thread {
             e.printStackTrace();
             return null;
         }
-        return new BoardReadThread(activity, socket, inputStream, bitmap);
+        return new BoardReadThread(activity, socket, inputStream, boardHolder, messageQueue);
     }
 
     @Override
@@ -123,13 +132,16 @@ public class BoardReadThread extends Thread {
         }
 
         // Convert byte array to local bitmap
-        Bitmap board = BitmapFactory.decodeByteArray(bitmapBytes, 0, expecting);
+        Bitmap serverBoard = BitmapFactory.decodeByteArray(bitmapBytes, 0, expecting);
+        bitmap = Bitmap.createBitmap(serverBoard.getWidth(), serverBoard.getHeight(), serverBoard.getConfig());
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(board, 0, 0, null);
+        canvas.drawBitmap(serverBoard, 0, 0, null);
+        boardHolder.setImage(bitmap);
+        boardHolder.setImageListener(new BoardAddPixelListener(bitmap, messageQueue));
 
         // Alert UI handler for update
         Message message = new Message();
-        message.what = BoardActivity.MESSAGE_REFRESH_BOARD;
+        message.what = BoardActivity.MESSAGE_SET_BOARD;
         BoardActivity.updateHandler.sendMessage(message);
     }
 

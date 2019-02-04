@@ -79,7 +79,6 @@ public class ServerPerClientThread extends Thread {
         } else {
             return;
         }
-
         // Construct the line that the client drew
         Line line = new Line(color, clientID);
         if (count == 0) {
