@@ -25,26 +25,11 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/classAnalysis.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/javaCompile.lock" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/javaCompile/taskHistory.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.bin" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/BoardActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/BoardActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ColorPicker/ColorPickerDialog.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ColorPicker/ColorPickerDialog.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/BoardAddPixelListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/BoardAddPixelListener.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/CommunicateTask/BoardReadThread.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/CommunicateTask/BoardReadThread.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/ServerAddPixelListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/ServerAddPixelListener.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/board_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/board_activity.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/color_picker.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/color_picker.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/server_board_activity.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/server_board_activity.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/arrays.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -90,14 +75,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ClientBoardActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ClientBoardActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+            <state relative-caret-position="504">
+              <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
               <folding>
                 <element signature="e#1519#1898#0" expanded="true" />
-                <element signature="e#1897#1898#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -162,11 +146,10 @@
       <file leaf-file-name="ServerBoardActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state relative-caret-position="430">
+              <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="49" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1543#1922#0" expanded="true" />
                 <element signature="e#1921#1922#0" expanded="true" />
                 <element signature="e#2114#2115#0" expanded="true" />
                 <element signature="e#2146#2147#0" expanded="true" />
@@ -177,7 +160,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BoardHolder.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BoardHolder.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="234">
@@ -2299,17 +2282,16 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/color_picker.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/server_board_activity.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/BoardActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="483" />
-    <option name="y" value="51" />
-    <option name="width" value="958" />
-    <option name="height" value="1076" />
+  <component name="ProjectFrameBounds" extendedState="4">
+    <option name="y" value="24" />
+    <option name="width" value="960" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -2445,7 +2427,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="device.picker.selection" value="988964424b474c4c51" />
+    <property name="device.picker.selection" value="Nexus_5_API_24" />
     <property name="android.profiler.active" value="true" />
     <property name="DEBUGGABLE_DEVICE" value="samsung-sm_g950u-988964424b474c4c51" />
     <property name="DEBUGGABLE_PROCESS" value="com.example.riley.piplace" />
@@ -2632,7 +2614,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-4" width="1920" height="1084" extended-state="6" />
+    <frame x="0" y="24" width="960" height="1056" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2643,14 +2625,14 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22827224" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2351672" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32879582" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16008538" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32822758" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32470334" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -3062,24 +3044,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-          <folding>
-            <element signature="e#1519#1898#0" expanded="true" />
-            <element signature="e#1897#1898#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="234">
+          <caret line="25" column="49" lean-forward="false" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="43" column="0" lean-forward="false" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+        <state relative-caret-position="430">
+          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="49" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1543#1922#0" expanded="true" />
             <element signature="e#1921#1922#0" expanded="true" />
             <element signature="e#2114#2115#0" expanded="true" />
             <element signature="e#2146#2147#0" expanded="true" />
@@ -3089,11 +3067,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/PlayBoard/BoardHolder.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="25" column="49" lean-forward="false" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
-          <folding />
+        <state relative-caret-position="504">
+          <caret line="46" column="13" lean-forward="false" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+          <folding>
+            <element signature="e#1519#1898#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

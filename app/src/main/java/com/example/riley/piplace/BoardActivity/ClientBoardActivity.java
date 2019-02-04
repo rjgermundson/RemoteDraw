@@ -39,9 +39,9 @@ public class ClientBoardActivity extends BoardActivity {
             @Override
             public void onClick(View v) {
                 if (isDrag) {
-                    button.setImageResource(R.drawable.ic_pan_tool_black_24dp);
-                } else {
                     button.setImageResource(R.drawable.ic_edit_black_24dp);
+                } else {
+                    button.setImageResource(R.drawable.ic_pan_tool_black_24dp);
                 }
                 isDrag = !isDrag;
             }
