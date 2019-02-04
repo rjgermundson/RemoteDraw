@@ -13,10 +13,14 @@ import android.widget.TextView;
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
 import com.example.riley.piplace.R;
 import com.example.riley.piplace.Server.CommunicateTask.BoardServerSocket;
+import com.example.riley.piplace.Server.CommunicateTask.LobbyAdvertiserThread;
 import com.example.riley.piplace.Server.LockedBitmap;
 import com.example.riley.piplace.Server.ServerAddPixelListener;
 import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
 import com.example.riley.piplace.Server.CommunicateTask.ServerUpdateThread;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 public class ServerBoardActivity extends BoardActivity {
@@ -108,5 +112,16 @@ public class ServerBoardActivity extends BoardActivity {
         serverListenTask.start();
         ServerUpdateThread serverUpdateThread = new ServerUpdateThread(findViewById(R.id.board_holder));
         serverUpdateThread.start();
+        try {
+            LobbyAdvertiserThread advertiserThread = LobbyAdvertiserThread.createThread(InetAddress.getByName(IP), port);
+            if (advertiserThread != null) {
+                System.out.println("Advertising");
+                advertiserThread.start();
+            } else {
+                System.out.println("Failed to advertise");
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 }

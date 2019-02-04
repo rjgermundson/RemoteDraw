@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.riley.piplace.BoardActivity.ClientBoardActivity;
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
+import com.example.riley.piplace.Client.CommunicateTask.QueryLobbyThread;
 import com.example.riley.piplace.R;
 import com.example.riley.piplace.Server.CommunicateTask.HostTask;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setConnectButton();
         setHostButton();
+        setQuery();
     }
 
     /**
@@ -50,6 +52,32 @@ public class MainActivity extends AppCompatActivity {
     private void setHostButton() {
         Button host = findViewById(R.id.host_button);
         host.setOnClickListener(new HostClickListener(this));
+    }
+
+    private void setQuery() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ip = wifiInfo.getIpAddress();
+        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+            ip = Integer.reverseBytes(ip);
+        }
+        byte[] ipBytes = BigInteger.valueOf(ip).toByteArray();
+
+        try {
+            for (int i = 0; i < ipBytes.length; i++) {
+                System.out.println(String.format("%02x", ipBytes[i]));
+            }
+            InetAddress host = InetAddress.getByAddress(ipBytes);
+            QueryLobbyThread queryThread = QueryLobbyThread.createThread(host);
+            if (queryThread != null) {
+                queryThread.start();
+            } else {
+                Toast.makeText(getApplicationContext(), "Failed to create query thread", Toast.LENGTH_SHORT).show();
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Failed to create query thread", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class ConnectOnClickListener implements View.OnClickListener {
