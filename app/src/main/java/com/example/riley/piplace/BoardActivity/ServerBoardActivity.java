@@ -107,11 +107,21 @@ public class ServerBoardActivity extends BoardActivity {
         }
     }
 
+    /**
+     * Sets up the listening threads needed for this server
+     */
     private void setServerListener() {
-        ServerListenThread serverListenTask = new ServerListenThread(BoardServerSocket.getSocket());
+        // Primary server loop, listening for clients
+        ServerListenThread serverListenTask = new ServerListenThread();
         serverListenTask.start();
-        ServerUpdateThread serverUpdateThread = new ServerUpdateThread(findViewById(R.id.board_holder));
+
+        // Listen for updates that need to be applied on server board
+        // Sends out updates to each client once server board is updated
+        // Allows for synchronization between server board and state of clients' boards
+        ServerUpdateThread serverUpdateThread = new ServerUpdateThread();
         serverUpdateThread.start();
+
+        // Sets up the socket for receiving requests for open servers
         try {
             LobbyAdvertiserThread advertiserThread = LobbyAdvertiserThread.createThread(InetAddress.getByName(IP), port);
             if (advertiserThread != null) {

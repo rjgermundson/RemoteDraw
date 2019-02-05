@@ -1,6 +1,7 @@
 package com.example.riley.piplace.Server.CommunicateTask;
 
 import java.net.ServerSocket;
+import java.net.SocketException;
 
 /**
  * Class allowing a socket to be used between activities to listen for clients

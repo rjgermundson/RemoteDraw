@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +20,9 @@ import com.example.riley.piplace.R;
 public class BoardActivity extends AppCompatActivity {
     public static final int MESSAGE_REFRESH_BOARD = 20;
     public static final int MESSAGE_SET_BOARD = 21;
-    public static final int BOARD_PIXEL_WIDTH = 256;
-    public static final int BOARD_PIXEL_HEIGHT = 256;
-    public static UpdateBoardHandler updateHandler;  // Todo: Make private and pass to ReadTask and AddPixelListener
+    public static final int BOARD_PIXEL_WIDTH = 128;
+    public static final int BOARD_PIXEL_HEIGHT = 128;
+    public static UpdateBoardHandler updateHandler;
     public static boolean isDrag = true;
     static int color = Color.RED;
 

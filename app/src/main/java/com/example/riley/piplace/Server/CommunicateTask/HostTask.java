@@ -3,11 +3,11 @@ package com.example.riley.piplace.Server.CommunicateTask;
 import android.os.AsyncTask;
 
 import com.example.riley.piplace.MainActivity.MainActivity;
-import com.example.riley.piplace.Server.CommunicateTask.BoardServerSocket;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 
@@ -32,7 +32,10 @@ public class HostTask extends AsyncTask<Void, Void, Boolean> {
         try {
             inetAddress = InetAddress.getByName(ip);
             try {
-                serverSocket = new ServerSocket(port, 5, inetAddress);
+                serverSocket = new ServerSocket();
+                serverSocket.setReuseAddress(true);
+                InetSocketAddress address = new InetSocketAddress(inetAddress, port);
+                serverSocket.bind(address);
             } catch (IOException e) {
                 System.out.println("Failed to create socket with IP: " + ip);
             }

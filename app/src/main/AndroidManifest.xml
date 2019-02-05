@@ -17,8 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BoardActivity.ClientBoardActivity"/>
-        <activity android:name=".BoardActivity.ServerBoardActivity"/>
+        <activity android:name=".BoardActivity.ClientBoardActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".BoardActivity.ServerBoardActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".SearchLobby.SearchLobbyActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

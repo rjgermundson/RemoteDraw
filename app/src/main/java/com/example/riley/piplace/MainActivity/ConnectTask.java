@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 
@@ -29,14 +30,11 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected Boolean doInBackground(Void... params) {
         InetAddress address = getAddress(host);
-        System.err.println("Opening");
         if (address == null) {
             return false;
         }
         try {
-            System.err.println("Connecting");
             this.socket = connectToHost(address, port);
-            System.out.println("Finished connecting");
         } catch (IOException e) {
             e.printStackTrace();
             this.socket = null;
@@ -48,7 +46,11 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean result) {
         super.onPostExecute(result);
         if (result) {
-            System.out.println("Post connected");
+            try {
+                socket.setReuseAddress(true);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
             BoardClientSocket.setSocket(socket);
             mainActivity.get().openClientBoard();
         } else {

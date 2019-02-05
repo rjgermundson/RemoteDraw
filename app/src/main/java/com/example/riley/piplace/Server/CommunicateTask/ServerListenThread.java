@@ -14,11 +14,10 @@ public class ServerListenThread extends Thread {
     private static final int MAX_CONNECTIONS = 10;
     private static final ServerPerClientThread[] clients = new ServerPerClientThread[MAX_CONNECTIONS];
 
-
     private ServerSocket serverSocket;
 
-    public ServerListenThread(ServerSocket serverSocket) {
-        this.serverSocket = serverSocket;
+    public ServerListenThread() {
+        this.serverSocket = BoardServerSocket.getSocket();
     }
 
     @Override

@@ -75,7 +75,6 @@ public class ServerPerClientThread extends Thread {
         if (input.available() > 0) {
             color = input.readInt();
             count = input.readInt();
-            System.out.println("COUNT: " + count);
         } else {
             return;
         }
@@ -89,7 +88,6 @@ public class ServerPerClientThread extends Thread {
         for (int i = 0; i < count; i++) {
             int x = input.readInt();
             int y = input.readInt();
-            System.out.println(x + ", " + y);
             line.addPixel(new Pair<>(x, y));
         }
         ServerUpdateThread.addLine(line);

@@ -5,13 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Message;
 import android.util.Pair;
-import android.view.View;
 
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.Messages.Lines.Line;
 import com.example.riley.piplace.Server.LockedBitmap;
 
-import java.lang.ref.WeakReference;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -20,15 +18,11 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ServerUpdateThread extends Thread {
     private static BlockingQueue<Line> strokes = new LinkedBlockingQueue<>();
-    private WeakReference<View> view;
 
     /**
      * Constructor for ServerUpdateThread
-     * @param view The view the bitmap is set to
      */
-    public ServerUpdateThread(View view) {
-        this.view = new WeakReference<>(view);
-    }
+    public ServerUpdateThread() { }
 
     public static void addLine(Line l) {
         strokes.add(l);

@@ -36,7 +36,7 @@ public class QueryLobbyThread extends Thread {
             ping();
             receive();
             try {
-                sleep(2000);
+                sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
