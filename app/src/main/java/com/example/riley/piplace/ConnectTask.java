@@ -1,7 +1,11 @@
-package com.example.riley.piplace.MainActivity;
+package com.example.riley.piplace;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
+import com.example.riley.piplace.BoardActivity.ClientBoardActivity;
 import com.example.riley.piplace.Client.CommunicateTask.BoardClientSocket;
 
 import java.io.IOException;
@@ -10,31 +14,24 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-
 
 public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
-    private WeakReference<MainActivity> mainActivity;
-    private String host;
+    private WeakReference<Activity> activity;
+    private InetAddress host;
     private int port;
     private Socket socket;
 
-    ConnectTask(MainActivity mainActivity,
-                       String host, int port) {
+    public ConnectTask(Activity activity, InetAddress host, int port) {
         super();
-        this.mainActivity = new WeakReference<>(mainActivity);
+        this.activity = new WeakReference<>(activity);
         this.host = host;
         this.port = port;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        InetAddress address = getAddress(host);
-        if (address == null) {
-            return false;
-        }
         try {
-            this.socket = connectToHost(address, port);
+            this.socket = connectToHost(host, port);
         } catch (IOException e) {
             e.printStackTrace();
             this.socket = null;
@@ -52,10 +49,10 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
                 e.printStackTrace();
             }
             BoardClientSocket.setSocket(socket);
-            mainActivity.get().openClientBoard();
+            openClientBoard();
         } else {
             BoardClientSocket.setSocket(null);
-            mainActivity.get().failedToOpenBoard(host);
+            toast("Failed to connect");
         }
     }
 
@@ -83,21 +80,6 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
         return socket;
     }
 
-    /**
-     * Get the IP associated with given hostname
-     * @param host Host to check for
-     * @return InetAddress for given host
-     *         null if invalid host, or no IP found
-     */
-    private InetAddress getAddress(String host) {
-        InetAddress result;
-        try {
-            result = InetAddress.getByName(host);
-        } catch (UnknownHostException e) {
-            return null;
-        }
-        return result;
-    }
 
     /**
      * Closes the socket this task communicates on
@@ -108,5 +90,20 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Opens a board activity from the calling activity
+     */
+    private void openClientBoard() {
+        activity.get().startActivity(new Intent(activity.get(), ClientBoardActivity.class));
+    }
+
+    /**
+     * Alert the user of an error
+     * @param message Message to tell the user
+     */
+    private void toast(String message) {
+        Toast.makeText(activity.get().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

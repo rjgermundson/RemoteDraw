@@ -12,8 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.riley.piplace.BoardActivity.ClientBoardActivity;
 import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
+import com.example.riley.piplace.ConnectTask;
 import com.example.riley.piplace.R;
 import com.example.riley.piplace.SearchLobby.SearchLobbyActivity;
 import com.example.riley.piplace.Server.CommunicateTask.HostTask;
@@ -80,8 +80,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             String host = hostText.getText().toString();
-            ConnectTask task = new ConnectTask(mainActivity, host, PORT);
-            task.execute();
+            try {
+                InetAddress address = InetAddress.getByName(host);
+                ConnectTask task = new ConnectTask(mainActivity, address, PORT);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             }
             byte[] ipBytes = BigInteger.valueOf(ip).toByteArray();
 
-            String hostIP = "";
+            String hostIP;
             try {
                 hostIP = InetAddress.getByAddress(ipBytes).getHostAddress();
                 HostTask task = new HostTask(mainActivity, hostIP, PORT);
@@ -114,16 +119,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void failedToOpenBoard(String host) {
-        Toast.makeText(this, "Failed to connect to " + host, Toast.LENGTH_SHORT).show();
-    }
-
     public void failedToHost() {
         Toast.makeText(this, "Failed to open server", Toast.LENGTH_SHORT).show();
-    }
-
-    public void openClientBoard() {
-        startActivity(new Intent(this, ClientBoardActivity.class));
     }
 
     public void openServerBoard(String IP, int port) {

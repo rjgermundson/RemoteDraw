@@ -1,15 +1,20 @@
 package com.example.riley.piplace.SearchLobby;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.riley.piplace.ConnectTask;
 import com.example.riley.piplace.R;
 
 import java.lang.ref.WeakReference;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,9 +41,25 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
 
     @Override
     public void onBindViewHolder(@NonNull LobbyViewHolder holder, int position) {
-        LobbyInfo info = lobbies.get(position);
+        final LobbyInfo info = lobbies.get(position);
         holder.nameText.setText(info.getName());
         holder.countText.setText(Integer.toString(info.getCount()) + " / " + info.getLimit());
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = info.getName();
+                InetAddress address = null;
+                try {
+                    address = InetAddress.getByAddress(info.getAddress());
+                } catch (UnknownHostException e) {
+                    toast("Failed to connect to " + info.getName());
+                    return;
+                }
+                int port = info.getPort();
+                ConnectTask connectTask = new ConnectTask(activity.get(), address, port);
+                connectTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
     }
 
     @Override
@@ -54,6 +75,10 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
         if (lobbyInfoSet.add(lobby)) {
             lobbies.add(lobby);
         }
+    }
+
+    private void toast(String message) {
+        Toast.makeText(activity.get().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     class LobbyViewHolder extends RecyclerView.ViewHolder {

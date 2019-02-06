@@ -104,6 +104,7 @@ public class LobbyAdvertiserThread extends Thread {
         int clientPort = packet.getPort();
         System.out.println("PORT: " + clientPort);
         System.out.println("ADDRESS: " + clientAddress);
+        // TODO: Finish response for UDP Broadcast
     }
 
     // Alerts the LAN server hosted on the UW LAN network

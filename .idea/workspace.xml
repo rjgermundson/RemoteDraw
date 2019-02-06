@@ -31,16 +31,10 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/CommunicateTask/QueryLobbyThread.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/QueryLobbyThread.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/QueryLobbyDatagram.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/QueryLobbyDatagram.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Messages/Lines/Line.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Messages/Lines/Line.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyInfo.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyInfo.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/ConnectTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/ConnectTask.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/SearchLobbyActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/SearchLobbyActivity.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -83,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LobbyInfo.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LobbyInfo.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="50" column="22" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+            <state relative-caret-position="720">
+              <caret line="50" column="22" lean-forward="false" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -106,9 +100,38 @@
       <file leaf-file-name="LobbyListAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="25" column="42" lean-forward="false" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
-              <folding />
+            <state relative-caret-position="450">
+              <caret line="58" column="23" lean-forward="false" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
+              <folding>
+                <element signature="e#1710#2391#0" expanded="true" />
+                <element signature="e#2390#2391#0" expanded="true" />
+                <element signature="e#2445#2446#0" expanded="true" />
+                <element signature="e#2487#2488#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConnectTask.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/ConnectTask.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="199">
+              <caret line="54" column="37" lean-forward="false" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-162">
+              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -123,11 +146,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LobbyAdvertiserThread.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LobbyAdvertiserThread.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-162">
-              <caret line="16" column="50" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state relative-caret-position="73">
+              <caret line="111" column="32" lean-forward="false" selection-start-line="111" selection-start-column="32" selection-end-line="111" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -2198,7 +2221,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/HostTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/ServerUpdateTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/ServerUpdateThread.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/CommunicateTask/BoardReadTask.java" />
@@ -2222,7 +2244,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ClientBoardActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Client/QueryLobbyDatagram.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/search_lobby_activity.xml" />
@@ -2234,7 +2255,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/ServerUpdateThread.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/ServerListenThread.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/HostTask.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/ConnectTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/BoardServerSocket.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/BoardActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
@@ -2244,16 +2264,19 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/ServerPerClientThread.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/BoardActivity/ServerBoardActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/SearchLobbyActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/QueryLobbyDatagram.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/QueryLobbyThread.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyInfo.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/ConnectTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/ConnectTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="556" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="265" />
     <option name="y" value="-4" />
     <option name="width" value="960" />
     <option name="height" value="1048" />
@@ -2336,49 +2359,6 @@
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
               <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="BoardActivity" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="Client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="Client" type="462c0819:PsiDirectoryNode" />
-              <item name="CommunicateTask" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="MainActivity" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="Lines" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
-              <item name="SearchLobby" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RemoteDraw" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="piplace" type="cbb59c9e:AndroidPsiDirectoryNode" />
               <item name="Server" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -2413,6 +2393,11 @@
     <property name="DEBUGGABLE_PROCESS" value="com.example.riley.piplace" />
     <property name="SHOW_ALL_PROCESSES" value="false" />
     <property name="DEBUGGER_ID" value="Auto" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.riley.piplace" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -2603,8 +2588,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-4" width="1920" height="1084" extended-state="7" />
-    <editor active="true" />
+    <frame x="0" y="-4" width="1920" height="1084" extended-state="6" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -2615,7 +2599,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20628272" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20628272" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3279396" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -2946,30 +2930,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/ConnectTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="36">
           <caret line="2" column="37" lean-forward="false" selection-start-line="2" selection-start-column="37" selection-end-line="2" selection-end-column="52" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="120" column="23" lean-forward="false" selection-start-line="120" selection-start-column="23" selection-end-line="120" selection-end-column="23" />
-          <folding>
-            <element signature="e#3001#3002#0" expanded="false" />
-            <element signature="e#3053#3054#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3072,14 +3037,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-162">
-          <caret line="16" column="50" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/QueryLobbyDatagram.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
@@ -3096,14 +3053,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="25" column="42" lean-forward="false" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/ServerAddPixelListener.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="433">
@@ -3114,8 +3063,49 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="50" column="22" lean-forward="true" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+        <state relative-caret-position="720">
+          <caret line="50" column="22" lean-forward="false" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/MainActivity/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-162">
+          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/SearchLobby/LobbyListAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="58" column="23" lean-forward="false" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
+          <folding>
+            <element signature="e#1710#2391#0" expanded="true" />
+            <element signature="e#2390#2391#0" expanded="true" />
+            <element signature="e#2445#2446#0" expanded="true" />
+            <element signature="e#2487#2488#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/ConnectTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="54" column="37" lean-forward="false" selection-start-line="54" selection-start-column="37" selection-end-line="54" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/riley/piplace/Server/CommunicateTask/LobbyAdvertiserThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="111" column="32" lean-forward="false" selection-start-line="111" selection-start-column="32" selection-end-line="111" selection-end-column="32" />
           <folding />
         </state>
       </provider>
