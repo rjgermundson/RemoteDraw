@@ -10,15 +10,19 @@ import android.widget.TextView;
 import com.example.riley.piplace.R;
 
 import java.lang.ref.WeakReference;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.LobbyViewHolder> {
     private WeakReference<SearchLobbyActivity> activity;
+    private Set<LobbyInfo> lobbyInfoSet;
     private List<LobbyInfo> lobbies;
 
     public LobbyListAdapter(SearchLobbyActivity lobbyActivity) {
         this.activity = new WeakReference<>(lobbyActivity);
+        this.lobbyInfoSet = new HashSet<>();
         this.lobbies = new LinkedList<>();
     }
 
@@ -34,12 +38,12 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
     public void onBindViewHolder(@NonNull LobbyViewHolder holder, int position) {
         LobbyInfo info = lobbies.get(position);
         holder.nameText.setText(info.getName());
-        holder.countText.setText(Integer.toString(info.getCount()));
+        holder.countText.setText(Integer.toString(info.getCount()) + " / " + info.getLimit());
     }
 
     @Override
     public int getItemCount() {
-        return lobbies.size();
+        return lobbyInfoSet.size();
     }
 
     /**
@@ -47,8 +51,9 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
      * @param lobby Lobby to add to list
      */
     public void addLobby(LobbyInfo lobby) {
-        lobbies.add(lobby);
-        notifyItemInserted(lobbies.size());
+        if (lobbyInfoSet.add(lobby)) {
+            lobbies.add(lobby);
+        }
     }
 
     class LobbyViewHolder extends RecyclerView.ViewHolder {
@@ -62,6 +67,5 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
             this.nameText = view.findViewById(R.id.lobby_name);
             this.countText = view.findViewById(R.id.lobby_count);
         }
-
     }
 }

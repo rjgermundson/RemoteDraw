@@ -24,6 +24,10 @@ import java.net.UnknownHostException;
 
 
 public class ServerBoardActivity extends BoardActivity {
+    LobbyAdvertiserThread advertiserThread;
+    ServerListenThread listenThread;
+    ServerUpdateThread updateThread;
+
     private String IP;
     private int port;
 
@@ -72,6 +76,12 @@ public class ServerBoardActivity extends BoardActivity {
         return color;
     }
 
+    @Override
+    public void close() {
+        super.close();
+        advertiserThread.close();
+    }
+
     /**
      * Initialize the session fields
      */
@@ -112,18 +122,18 @@ public class ServerBoardActivity extends BoardActivity {
      */
     private void setServerListener() {
         // Primary server loop, listening for clients
-        ServerListenThread serverListenTask = new ServerListenThread();
-        serverListenTask.start();
+        listenThread = new ServerListenThread();
+        listenThread.start();
 
         // Listen for updates that need to be applied on server board
         // Sends out updates to each client once server board is updated
         // Allows for synchronization between server board and state of clients' boards
-        ServerUpdateThread serverUpdateThread = new ServerUpdateThread();
-        serverUpdateThread.start();
+        updateThread = new ServerUpdateThread();
+        updateThread.start();
 
         // Sets up the socket for receiving requests for open servers
         try {
-            LobbyAdvertiserThread advertiserThread = LobbyAdvertiserThread.createThread(InetAddress.getByName(IP), port);
+            advertiserThread = LobbyAdvertiserThread.createThread(InetAddress.getByName(IP), port, "TEST");
             if (advertiserThread != null) {
                 System.out.println("Advertising");
                 advertiserThread.start();

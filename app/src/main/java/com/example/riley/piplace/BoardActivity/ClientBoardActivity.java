@@ -1,34 +1,20 @@
 package com.example.riley.piplace.BoardActivity;
 
-import android.graphics.Bitmap;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.riley.piplace.BoardActivity.PlayBoard.BoardHolder;
-import com.example.riley.piplace.Client.BoardAddPixelListener;
 import com.example.riley.piplace.Client.CommunicateTask.BoardClientSocket;
 import com.example.riley.piplace.Client.CommunicateTask.BoardReadThread;
 import com.example.riley.piplace.Client.CommunicateTask.BoardWriteThread;
-import com.example.riley.piplace.Client.CommunicateTask.QueryLobbyThread;
 import com.example.riley.piplace.Messages.Lines.Line;
 import com.example.riley.piplace.R;
-import com.example.riley.piplace.Server.CommunicateTask.HostTask;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.ByteOrder;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 

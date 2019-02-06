@@ -74,6 +74,7 @@ public class Line {
 
     public byte[] getBytes() {
         byte[] result = new byte[INTEGER_BYTE_COUNT * 2 + pixels.size() * INTEGER_BYTE_COUNT * 2];
+        System.out.println(color + " : " + pixels.size());
         System.arraycopy(Utility.intToBytes(color), 0, result, 0, INTEGER_BYTE_COUNT);
         System.arraycopy(Utility.intToBytes(pixels.size()), 0, result, INTEGER_BYTE_COUNT, INTEGER_BYTE_COUNT);
 
