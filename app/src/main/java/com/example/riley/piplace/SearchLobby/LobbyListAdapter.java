@@ -44,6 +44,11 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
         final LobbyInfo info = lobbies.get(position);
         holder.nameText.setText(info.getName());
         holder.countText.setText(Integer.toString(info.getCount()) + " / " + info.getLimit());
+        try {
+            holder.addressText.setText("" + InetAddress.getByAddress(info.getAddress()));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +82,15 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
         }
     }
 
+    /**
+     * Removes the given lobby from the list of lobbies
+     * @param info Lobby to remove from the list
+     */
+    public void removeLobby(LobbyInfo info) {
+        lobbyInfoSet.remove(info);
+        lobbies.remove(info);
+    }
+
     private void toast(String message) {
         Toast.makeText(activity.get().getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -85,12 +99,14 @@ public class LobbyListAdapter extends RecyclerView.Adapter<LobbyListAdapter.Lobb
         View view;
         TextView nameText;
         TextView countText;
+        TextView addressText;
 
         LobbyViewHolder(View view) {
             super(view);
             this.view = view;
             this.nameText = view.findViewById(R.id.lobby_name);
             this.countText = view.findViewById(R.id.lobby_count);
+            this.addressText = view.findViewById(R.id.lobby_address);
         }
     }
 }

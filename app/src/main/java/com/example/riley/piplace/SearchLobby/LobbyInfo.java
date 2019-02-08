@@ -11,14 +11,16 @@ public class LobbyInfo {
     private int limit;
     private byte[] address;
     private int port;
+    private boolean delete;
 
 
-    public LobbyInfo(String name, int count, int limit, byte[] address, int port) {
+    LobbyInfo(String name, int count, int limit, byte[] address, int port, boolean delete) {
         this.name = name;
         this.count = count;
         this.limit = limit;
         this.address = address;
         this.port = port;
+        this.delete = delete;
     }
 
     public String getName() {
@@ -40,6 +42,8 @@ public class LobbyInfo {
     public int getPort() {
         return port;
     }
+
+    public boolean getDelete() { return delete; }
 
     @Override
     public int hashCode() {

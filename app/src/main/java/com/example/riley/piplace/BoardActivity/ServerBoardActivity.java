@@ -32,6 +32,13 @@ public class ServerBoardActivity extends BoardActivity {
     private int port;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.out.println("CLOSING SERVER ACTIVITY");
+        advertiserThread.close();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitNetwork().build();
@@ -79,7 +86,6 @@ public class ServerBoardActivity extends BoardActivity {
     @Override
     public void close() {
         super.close();
-        advertiserThread.close();
     }
 
     /**

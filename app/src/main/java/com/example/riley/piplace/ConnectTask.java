@@ -72,6 +72,7 @@ public class ConnectTask extends AsyncTask<Void, Void, Boolean> {
      */
     private Socket connectToHost(InetAddress address, int port) throws IOException {
         Socket socket = new Socket();
+        System.out.println(address + " : " + port);
         socket.connect(new InetSocketAddress(address, port), 300);
         if (socket.isOutputShutdown()) {
             closeSocket();

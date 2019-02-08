@@ -1,6 +1,7 @@
 package com.example.riley.piplace.BoardActivity;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -89,6 +90,14 @@ public class BoardActivity extends AppCompatActivity {
         paint.setColor(color);
         canvas.drawCircle(image.getWidth() / 2, image.getHeight() / 2,
                           image.getWidth() / 2, paint);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent backToMain = new Intent(Intent.ACTION_MAIN);
+        backToMain.addCategory(Intent.CATEGORY_HOME);
+        backToMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(backToMain);
     }
 
     class ChangeColorListener implements View.OnClickListener {

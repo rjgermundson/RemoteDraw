@@ -17,12 +17,15 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 public class SearchLobbyActivity extends AppCompatActivity {
     public static final int MESSAGE_INSERT_LIST = 30;
+    public static final int MESSAGE_REMOVE_LIST = 31;
     public UpdateListHandler updateListHandler;
     private LobbyListAdapter lobbyAdapter;
     private QueryLobbyThread queryThread;
+    private byte[] address;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -44,9 +47,20 @@ public class SearchLobbyActivity extends AppCompatActivity {
 
     /**
      * Adds the given lobby to the current lobby list
+     * @param info LobbyInfo to add
      */
     public void addLobby(LobbyInfo info) {
-        lobbyAdapter.addLobby(info);
+        if (!Arrays.equals(info.getAddress(), address)) {
+            lobbyAdapter.addLobby(info);
+        }
+    }
+
+    /**
+     * Removes the given lobby from the current lobby list
+     * @param info LobbyInfo to remove
+     */
+    public void removeLobby(LobbyInfo info) {
+        lobbyAdapter.removeLobby(info);
     }
 
     private void setList() {
@@ -64,10 +78,10 @@ public class SearchLobbyActivity extends AppCompatActivity {
         if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
             ip = Integer.reverseBytes(ip);
         }
-        byte[] ipBytes = BigInteger.valueOf(ip).toByteArray();
+        address = BigInteger.valueOf(ip).toByteArray();
 
         try {
-            InetAddress host = InetAddress.getByAddress(ipBytes);
+            InetAddress host = InetAddress.getByAddress(address);
             queryThread = QueryLobbyThread.createThread(host, this);
             if (queryThread != null) {
                 queryThread.start();
@@ -117,6 +131,8 @@ public class SearchLobbyActivity extends AppCompatActivity {
             super.handleMessage(msg);
             if (msg.what == MESSAGE_INSERT_LIST) {
                 lobbyAdapter.notifyItemInserted(lobbyAdapter.getItemCount());
+            } else if (msg.what == MESSAGE_REMOVE_LIST) {
+                lobbyAdapter.notifyItemRemoved(0);
             }
         }
     }

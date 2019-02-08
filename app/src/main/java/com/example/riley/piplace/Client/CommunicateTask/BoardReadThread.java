@@ -75,8 +75,9 @@ public class BoardReadThread extends Thread {
         while (isConnected()) {
             try {
                 receive();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                closeSocket();
+                break;
             }
         }
         closeSocket();

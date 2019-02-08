@@ -13,6 +13,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,8 +22,9 @@ import java.util.List;
  * Also handles responses from potential lobbies
  */
 public class QueryLobbyThread extends Thread {
-    private static final String TEST_SERVER = "10.18.225.176";
+    private static final String TEST_SERVER = "10.19.122.92";
     private static final int PACKET_SIZE = 256;
+    private static final int PER_SERVER_SPACE = 48;
     private static final int LISTEN_PORT = 5200;
 
     private WeakReference<SearchLobbyActivity> activity;
@@ -49,6 +51,7 @@ public class QueryLobbyThread extends Thread {
         while (running) {
             System.out.println("PINGING");
             ping();
+            System.out.println("RECEIVING");
             receive();
             try {
                 sleep(2000);
@@ -95,12 +98,17 @@ public class QueryLobbyThread extends Thread {
             e.printStackTrace();
             return;
         }
+        System.out.println("PARSING RECEIVED PACKET");
         List<LobbyInfo> infoList = parse(rec);
         for (LobbyInfo lobby : infoList) {
-            activity.get().addLobby(lobby);
-            System.out.println(lobby.hashCode());
             Message message = new Message();
-            message.what = SearchLobbyActivity.MESSAGE_INSERT_LIST;
+            if (lobby.getDelete()) {
+                activity.get().removeLobby(lobby);
+                message.what = SearchLobbyActivity.MESSAGE_REMOVE_LIST;
+            } else {
+                activity.get().addLobby(lobby);
+                message.what = SearchLobbyActivity.MESSAGE_INSERT_LIST;
+            }
             activity.get().updateListHandler.sendMessage(message);
         }
     }
@@ -112,21 +120,25 @@ public class QueryLobbyThread extends Thread {
         byte[] totalInPacket = new byte[4];
         System.arraycopy(data, 0, totalPackets, 0, totalPackets.length);
         System.arraycopy(data, 4, totalInPacket, 0, totalInPacket.length);
+        int deleteFlag = 1;
         for (int i = 0; i < Utility.bytesToInt(totalInPacket); i++) {
+            System.out.println(String.format("%02x : %02x", data[9], deleteFlag));
+            boolean delete = (data[9] & deleteFlag) == 1;
+            deleteFlag = deleteFlag << 1;
             byte[] IP = new byte[4];
             byte[] portBytes = new byte[4];
             byte[] countBytes = new byte[4];
             byte[] limitBytes = new byte[4];
             byte[] nameBytes = new byte[32];
-            System.arraycopy(data, 8, IP, 0, IP.length);
-            System.arraycopy(data, 12, portBytes, 0, portBytes.length);
-            System.arraycopy(data, 16, countBytes, 0, countBytes.length);
-            System.arraycopy(data, 20, limitBytes, 0, limitBytes.length);
-            System.arraycopy(data, 24, nameBytes, 0, nameBytes.length);
+            System.arraycopy(data, 16 + PER_SERVER_SPACE * i, IP, 0, IP.length);
+            System.arraycopy(data, 20 + PER_SERVER_SPACE * i, portBytes, 0, portBytes.length);
+            System.arraycopy(data, 24 + PER_SERVER_SPACE * i, countBytes, 0, countBytes.length);
+            System.arraycopy(data, 28 + PER_SERVER_SPACE * i, limitBytes, 0, limitBytes.length);
+            System.arraycopy(data, 32 + PER_SERVER_SPACE * i, nameBytes, 0, nameBytes.length);
             int port = Utility.bytesToInt(portBytes);
             int count = Utility.bytesToInt(countBytes);
             int limit = Utility.bytesToInt(limitBytes);
-            LobbyInfo lobby = new LobbyInfo(new String(nameBytes), count, limit, IP, port);
+            LobbyInfo lobby = new LobbyInfo(new String(nameBytes), count, limit, IP, port, delete);
             result.add(lobby);
         }
         return result;

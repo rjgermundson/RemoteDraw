@@ -14,7 +14,8 @@ import java.net.UnknownHostException;
  * asking for it
  */
 public class LobbyAdvertiserThread extends Thread {
-    private static final String TEST_SERVER = "10.18.225.176";
+    private static final String TEST_SERVER = "10.19.122.92";
+    private static final int SERVER_PORT = 5050;
     private static final int PACKET_SIZE = 256;
     private static final int BROADCAST_PORT = 5600;
     private boolean running = true;
@@ -42,7 +43,7 @@ public class LobbyAdvertiserThread extends Thread {
 
     @Override
     public void run() {
-        alertLANServer();
+        alertLANServer(false);
         while (running) {
             DatagramPacket packet = listen();
             if (validPacket(packet)) {
@@ -53,7 +54,8 @@ public class LobbyAdvertiserThread extends Thread {
 
     public void close() {
         this.running = false;
-        // Todo Alert LAN server of closing
+        System.out.println("Alerting");
+        alertLANServer(true);
     }
 
     /**
@@ -81,8 +83,6 @@ public class LobbyAdvertiserThread extends Thread {
     private boolean validPacket(DatagramPacket packet) {
         if (packet == null) {
             return false;
-        } else if (packet.getAddress().equals(host)) {
-            System.out.println("Same as host");
         }
         byte[] data = packet.getData();
         for (int i = 0; i < PACKET_SIZE; i++) {
@@ -109,9 +109,8 @@ public class LobbyAdvertiserThread extends Thread {
 
     // Alerts the LAN server hosted on the UW LAN network
     // because they seem to have disabled multicast and UDP broadcast
-    private void alertLANServer() {
+    private void alertLANServer(boolean delete) {
         InetAddress server;
-        int port = 5050;
         try {
             server = InetAddress.getByName(TEST_SERVER);
         } catch (UnknownHostException e) {
@@ -121,6 +120,9 @@ public class LobbyAdvertiserThread extends Thread {
 
         byte[] byteInfo = new byte[PACKET_SIZE];
         byteInfo[0] = (byte) 0x80;
+        if (delete) {
+            byteInfo[0] |= 1;
+        }
         System.out.println((int) byteInfo[0]);
         System.arraycopy(host.getAddress(), 0, byteInfo, 8, 4);
         System.arraycopy(Utility.intToBytes(port), 0, byteInfo, 12, 4);
@@ -134,7 +136,7 @@ public class LobbyAdvertiserThread extends Thread {
         for (int i = 56; i < byteInfo.length; i++) {
             byteInfo[i] = (byte) i;
         }
-        DatagramPacket info = new DatagramPacket(byteInfo, PACKET_SIZE, server, port);
+        DatagramPacket info = new DatagramPacket(byteInfo, PACKET_SIZE, server, SERVER_PORT);
         try {
             socket.send(info);
             System.out.println("SENT PACKET");

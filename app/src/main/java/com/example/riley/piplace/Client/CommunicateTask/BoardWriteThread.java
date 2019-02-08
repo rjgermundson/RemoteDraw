@@ -64,7 +64,8 @@ public class BoardWriteThread extends Thread {
                 Line message = messages.take();
                 send(message);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                closeSocket();
+                break;
             }
         }
         closeSocket();
