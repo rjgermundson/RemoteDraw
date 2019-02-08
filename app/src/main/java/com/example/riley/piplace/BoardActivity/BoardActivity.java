@@ -92,14 +92,6 @@ public class BoardActivity extends AppCompatActivity {
                           image.getWidth() / 2, paint);
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent backToMain = new Intent(Intent.ACTION_MAIN);
-        backToMain.addCategory(Intent.CATEGORY_HOME);
-        backToMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(backToMain);
-    }
-
     class ChangeColorListener implements View.OnClickListener {
 
         @Override

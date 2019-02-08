@@ -38,8 +38,8 @@ public class SearchLobbyActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         if (queryThread != null) {
             queryThread.close();
         }
