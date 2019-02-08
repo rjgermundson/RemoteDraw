@@ -29,7 +29,8 @@ public class QueryLobbyThread extends Thread {
 
     private WeakReference<SearchLobbyActivity> activity;
     private DatagramSocket socket;
-    private boolean running = true;
+    private boolean runnable = true;
+    private boolean paused = false;
 
     private QueryLobbyThread(DatagramSocket socket, SearchLobbyActivity activity) {
         this.activity = new WeakReference<>(activity);
@@ -48,11 +49,11 @@ public class QueryLobbyThread extends Thread {
 
     @Override
     public void run() {
-        while (running) {
-            System.out.println("PINGING");
-            ping();
-            System.out.println("RECEIVING");
-            receive();
+        while (runnable) {
+            if (!paused) {
+                ping();
+                receive();
+            }
             try {
                 sleep(2000);
             } catch (InterruptedException e) {
@@ -65,7 +66,21 @@ public class QueryLobbyThread extends Thread {
      * End the current thread;
      */
     public void close() {
-        this.running = false;
+        this.runnable = false;
+    }
+
+    /**
+     * Pause the thread from sending on network
+     */
+    public void pause() {
+        this.paused = true;
+    }
+
+    /**
+     * Unpause the thread from sending on network
+     */
+    public void unpause() {
+        this.paused = false;
     }
 
     /**

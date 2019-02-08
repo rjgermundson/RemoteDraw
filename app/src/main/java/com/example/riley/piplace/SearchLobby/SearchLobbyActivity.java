@@ -45,6 +45,30 @@ public class SearchLobbyActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (queryThread != null) {
+            queryThread.pause();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (queryThread != null) {
+            queryThread.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (queryThread != null) {
+            queryThread.unpause();
+        }
+    }
+
     /**
      * Adds the given lobby to the current lobby list
      * @param info LobbyInfo to add
