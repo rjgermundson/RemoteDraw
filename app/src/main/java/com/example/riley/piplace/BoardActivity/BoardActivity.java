@@ -21,8 +21,8 @@ import com.example.riley.piplace.R;
 public class BoardActivity extends AppCompatActivity {
     public static final int MESSAGE_REFRESH_BOARD = 20;
     public static final int MESSAGE_SET_BOARD = 21;
-    public static final int BOARD_PIXEL_WIDTH = 128;
-    public static final int BOARD_PIXEL_HEIGHT = 128;
+    public static final int BOARD_PIXEL_WIDTH = 512;
+    public static final int BOARD_PIXEL_HEIGHT = 512;
     public static UpdateBoardHandler updateHandler;
     public static boolean isDrag = true;
     static int color = Color.RED;

@@ -77,6 +77,36 @@ public class Line {
         return pixels.size();
     }
 
+    /**
+     * Set this line to be the line between the two given points
+     * @param px Starting x coordinate
+     * @param py Starting y coordinate
+     * @param x End x coordinate
+     * @param y End y coordinate
+     */
+    public void setLine(double px, double py, int x, int y) {
+        double hypotenuse = Math.sqrt(Math.pow((x - px), 2) + Math.pow((y - py), 2));
+        if (Double.isNaN(hypotenuse)) {
+            pixels.add(new Pair<>(x, y));
+            return;
+        }
+        double dx = (x - px) / (hypotenuse);
+        double dy = (y - py) / (hypotenuse);
+        int currX;
+        int currY;
+        do {
+            currX = ((int) Math.round(px));
+            currY = ((int) Math.round(py));
+            pixels.add(new Pair<>(currX, currY));
+            if (currX != x) {
+                px += dx;
+            }
+            if (currY != y) {
+                py += dy;
+            }
+        } while (currX != x || currY != y);
+    }
+
     public byte[] getBytes() {
         byte[] result = new byte[INTEGER_BYTE_COUNT * 2 + pixels.size() * INTEGER_BYTE_COUNT * 2];
         System.arraycopy(Utility.intToBytes(color), 0, result, 0, INTEGER_BYTE_COUNT);

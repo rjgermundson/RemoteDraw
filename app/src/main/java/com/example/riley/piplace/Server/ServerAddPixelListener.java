@@ -76,17 +76,17 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             Canvas canvas = new Canvas(pixelBoard);
             Paint paint = new Paint();
             paint.setColor(color);
-            Set<Pair<Integer, Integer>> pixels = smooth(prevX, prevY, x, y);
+            Line line = new Line(color, -1);
+            line.setLine(prevX, prevY, x, y);
             prevX = x;
             prevY = y;
-            for (Pair<Integer, Integer> p : pixels) {
+            for (Pair<Integer, Integer> p : line.getPixels()) {
                 canvas.drawRect(p.first * widthStretch,
                         p.second * heightStretch,
                         p.first * widthStretch + widthStretch,
                         p.second * heightStretch + heightStretch,
                         paint);
             }
-            Line line = new Line(color, -1, pixels);
             ServerListenThread.sendLine(line);
 
             Message message = new Message();
@@ -95,26 +95,5 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             LockedBitmap.release();
         }
         return true;
-    }
-
-    private Set<Pair<Integer, Integer>> smooth(double px, double py, int x, int y) {
-        Set<Pair<Integer, Integer>> pixels = new HashSet<>();
-        double hypotenuse = Math.sqrt(Math.pow((x - px), 2) + Math.pow((y - py), 2));
-        double dx = (x - px) / (hypotenuse);
-        double dy = (y - py) / (hypotenuse);
-        int currX;
-        int currY;
-        do {
-            currX = ((int) Math.round(px));
-            currY = ((int) Math.round(py));
-            pixels.add(new Pair<>(currX, currY));
-            if (currX != x) {
-                px += dx;
-            }
-            if (currY != y) {
-                py += dy;
-            }
-        } while (currX != x || currY != y);
-        return pixels;
     }
 }

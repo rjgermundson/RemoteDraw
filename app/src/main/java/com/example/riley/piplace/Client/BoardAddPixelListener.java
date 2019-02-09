@@ -16,6 +16,7 @@ import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
 import com.example.riley.piplace.Server.LockedBitmap;
 
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -82,24 +83,15 @@ public class BoardAddPixelListener implements View.OnTouchListener {
             Paint paint = new Paint();
             paint.setColor(color);
             Line line = new Line(color, -1);
-            line.addPixel(new Pair<>(prevX, prevY));
-            while (prevX != x || prevY != y) {
-                if (prevX < x) {
-                    prevX++;
-                } else if (prevX > x) {
-                    prevX--;
-                }
-                if (prevY < y) {
-                    prevY++;
-                } else if (prevY > y) {
-                    prevY--;
-                }
-                canvas.drawRect(prevX * widthStretch,
-                        prevY * heightStretch,
-                        prevX * widthStretch + widthStretch,
-                        prevY * heightStretch + heightStretch,
+            line.setLine(prevX, prevY, x, y);
+            prevX = x;
+            prevY = y;
+            for (Pair<Integer, Integer> p : line.getPixels()) {
+                canvas.drawRect(p.first * widthStretch,
+                        p.second * heightStretch,
+                        p.first * widthStretch + widthStretch,
+                        p.second * heightStretch + heightStretch,
                         paint);
-                line.addPixel(new Pair<>(prevX, prevY));
             }
             messageQueue.add(line);
 
