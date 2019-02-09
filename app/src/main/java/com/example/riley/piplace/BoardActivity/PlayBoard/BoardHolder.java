@@ -158,8 +158,6 @@ public class BoardHolder extends LinearLayout {
      * @param deltaY Change in y direction (positive down)
      */
     private void translate(View view, int deltaX, int deltaY) {
-        System.out.println("TRANSLATING");
-
         int widthExcess = Math.round(drawBoard.getScaleX() * drawBoard.getMeasuredWidth() - drawBoard.getMeasuredWidth());
         int heightExcess = Math.round(drawBoard.getScaleY() * drawBoard.getMeasuredHeight() - drawBoard.getMeasuredHeight());
         int widthMargin = (this.getMeasuredWidth() - drawBoard.getMeasuredWidth()) / 2;

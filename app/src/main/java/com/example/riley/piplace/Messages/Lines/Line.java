@@ -22,6 +22,11 @@ public class Line {
         this.pixels = new HashSet<>();
     }
 
+    public Line(int color, int id, Set<Pair<Integer, Integer>> pixels) {
+        this(color, id);
+        this.pixels = pixels;
+    }
+
     /**
      * Returns the id of the client that submitted this line
      * @return The id of the client that submitted this line

@@ -13,6 +13,10 @@ import com.example.riley.piplace.BoardActivity.ServerBoardActivity;
 import com.example.riley.piplace.Messages.Lines.Line;
 import com.example.riley.piplace.Server.CommunicateTask.ServerListenThread;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class ServerAddPixelListener implements View.OnTouchListener {
     private int boardPixelWidth;
     private int boardPixelHeight;
@@ -72,26 +76,17 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             Canvas canvas = new Canvas(pixelBoard);
             Paint paint = new Paint();
             paint.setColor(color);
-            Line line = new Line(color, -1);
-            line.addPixel(new Pair<>(prevX, prevY));
-            while (prevX != x || prevY != y) {
-                if (prevX < x) {
-                    prevX++;
-                } else if (prevX > x) {
-                    prevX--;
-                }
-                if (prevY < y) {
-                    prevY++;
-                } else if (prevY > y) {
-                    prevY--;
-                }
-                canvas.drawRect(prevX * widthStretch,
-                        prevY * heightStretch,
-                        prevX * widthStretch + widthStretch,
-                        prevY * heightStretch + heightStretch,
+            Set<Pair<Integer, Integer>> pixels = smooth(prevX, prevY, x, y);
+            prevX = x;
+            prevY = y;
+            for (Pair<Integer, Integer> p : pixels) {
+                canvas.drawRect(p.first * widthStretch,
+                        p.second * heightStretch,
+                        p.first * widthStretch + widthStretch,
+                        p.second * heightStretch + heightStretch,
                         paint);
-                line.addPixel(new Pair<>(prevX, prevY));
             }
+            Line line = new Line(color, -1, pixels);
             ServerListenThread.sendLine(line);
 
             Message message = new Message();
@@ -100,5 +95,26 @@ public class ServerAddPixelListener implements View.OnTouchListener {
             LockedBitmap.release();
         }
         return true;
+    }
+
+    private Set<Pair<Integer, Integer>> smooth(double px, double py, int x, int y) {
+        Set<Pair<Integer, Integer>> pixels = new HashSet<>();
+        double hypotenuse = Math.sqrt(Math.pow((x - px), 2) + Math.pow((y - py), 2));
+        double dx = (x - px) / (hypotenuse);
+        double dy = (y - py) / (hypotenuse);
+        int currX;
+        int currY;
+        do {
+            currX = ((int) Math.round(px));
+            currY = ((int) Math.round(py));
+            pixels.add(new Pair<>(currX, currY));
+            if (currX != x) {
+                px += dx;
+            }
+            if (currY != y) {
+                py += dy;
+            }
+        } while (currX != x || currY != y);
+        return pixels;
     }
 }
